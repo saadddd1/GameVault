@@ -109,7 +109,8 @@ export async function POST(request: NextRequest) {
           updateDate: row['更新日期'] ? String(row['更新日期']) : new Date().toISOString().split('T')[0],
           downloadCount: row['下载次数'] ? Number(row['downloadCount']) : 0,
           isHot: row['是否热门'] === '是' || row['isHot'] === 'true' || false,
-          isNew: row['是否新品'] !== '否' && row['isNew'] !== 'false'
+          isNew: row['是否新品'] !== '否' && row['isNew'] !== 'false',
+          isFeatured: row['是否精选'] === '是' || row['isFeatured'] === 'true' || false
         })
 
         results.success++

@@ -23,7 +23,8 @@
       "updateDate": "2024-01-15",
       "downloadCount": 15000,
       "isHot": true,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": true
     },
     {
       "id": 2,
@@ -43,7 +44,8 @@
       "updateDate": "2024-01-10",
       "downloadCount": 12000,
       "isHot": true,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": true
     },
     {
       "id": 3,
@@ -68,7 +70,8 @@
       "updateDate": "2024-12-01",
       "downloadCount": 25000,
       "isHot": true,
-      "isNew": true
+      "isNew": true,
+      "isFeatured": false
     },
     {
       "id": 4,
@@ -88,7 +91,8 @@
       "updateDate": "2024-01-05",
       "downloadCount": 30000,
       "isHot": true,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": false
     },
     {
       "id": 5,
@@ -108,7 +112,8 @@
       "updateDate": "2024-12-15",
       "downloadCount": 20000,
       "isHot": true,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": false
     },
     {
       "id": 6,
@@ -128,7 +133,8 @@
       "updateDate": "2024-01-20",
       "downloadCount": 8000,
       "isHot": false,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": false
     },
     {
       "id": 7,
@@ -148,7 +154,8 @@
       "updateDate": "2024-01-08",
       "downloadCount": 6000,
       "isHot": false,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": false
     },
     {
       "id": 8,
@@ -168,7 +175,8 @@
       "updateDate": "2024-12-20",
       "downloadCount": 18000,
       "isHot": true,
-      "isNew": true
+      "isNew": true,
+      "isFeatured": false
     },
     {
       "id": 9,
@@ -188,7 +196,8 @@
       "updateDate": "2024-01-12",
       "downloadCount": 9000,
       "isHot": false,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": false
     },
     {
       "id": 10,
@@ -208,8 +217,17 @@
       "updateDate": "2024-01-18",
       "downloadCount": 7000,
       "isHot": false,
-      "isNew": false
+      "isNew": false,
+      "isFeatured": false
     }
   ],
-  "categories": ["动作冒险", "角色扮演", "策略模拟", "休闲益智", "射击竞速", "恐怖解谜", "体育格斗"]
+  "categories": [
+    "动作冒险",
+    "角色扮演",
+    "策略模拟",
+    "休闲益智",
+    "射击竞速",
+    "恐怖解谜",
+    "体育格斗"
+  ]
 }

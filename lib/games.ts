@@ -18,6 +18,7 @@ export interface Game {
   downloadCount: number
   isHot: boolean
   isNew: boolean
+  isFeatured: boolean
 }
 
 export interface GamesData {

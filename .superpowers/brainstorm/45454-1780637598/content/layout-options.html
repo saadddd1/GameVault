@@ -1,0 +1,152 @@
+<h2>首页布局方案对比</h2>
+<p class="subtitle">当前页面有 3 栏 + 重复排序，精简后更适合个人站</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">方案 A — 极简搜索型</div>
+        <div class="mockup-body">
+          <div class="mock-nav" style="display:flex;justify-content:space-between">
+            <span>GameVault</span>
+            <span style="display:flex;gap:10px">
+              <span>首页</span><span>全部</span><span style="color:#3b82f6">🔍 搜索...</span>
+            </span>
+          </div>
+          <div class="mock-content">
+            <div style="text-align:center;padding:40px 20px;background:#f0f5ff;border-radius:8px;margin-bottom:16px">
+              <div style="font-size:28px;font-weight:bold;margin-bottom:8px">精品游戏分享</div>
+              <div style="color:#666;margin-bottom:16px">发现、下载、畅玩</div>
+              <div class="mock-input" style="max-width:500px;margin:0 auto">🔍 搜索游戏名称...</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+              <span class="mock-button" style="background:#3b82f6;color:white">全部</span>
+              <span class="mock-button">动作冒险</span>
+              <span class="mock-button">角色扮演</span>
+              <span class="mock-button">策略模拟</span>
+              <span class="mock-button">更多...</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
+              <div class="placeholder" style="aspect-ratio:3/4;text-align:center">🎮<br>游戏1</div>
+              <div class="placeholder" style="aspect-ratio:3/4;text-align:center">🎮<br>游戏2</div>
+              <div class="placeholder" style="aspect-ratio:3/4;text-align:center">🎮<br>游戏3</div>
+              <div class="placeholder" style="aspect-ratio:3/4;text-align:center">🎮<br>游戏4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>方案 A：极简搜索型</h3>
+      <p>只有搜索框 + 分类标签 + 游戏网格。一行一个，无侧栏无排行榜。适合游戏量少的个人站。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>加载快，零干扰</li><li>用户直奔搜索/分类</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>没有推荐引导</li><li>新增游戏不容易被发现</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">方案 B — 聚焦推荐型</div>
+        <div class="mockup-body">
+          <div class="mock-nav" style="display:flex;justify-content:space-between">
+            <span>GameVault</span>
+            <span style="display:flex;gap:10px"><span>首页</span><span>全部游戏</span><span style="color:#3b82f6">🔍</span></span>
+          </div>
+          <div class="mock-content">
+            <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:16px">
+              <div class="placeholder" style="height:180px;display:flex;align-items:center;justify-content:center">
+                🎯 精选推荐（大图轮播）— 管理员手动选 3-5 款主推游戏
+              </div>
+              <div style="background:#f8fafc;border-radius:8px;padding:12px;font-size:12px">
+                <div style="font-weight:bold;margin-bottom:8px">🔥 热门排行</div>
+                <div>1. 黑神话：悟空</div>
+                <div>2. GTA5</div>
+                <div>3. 原神</div>
+                <div>4. 幻兽帕鲁</div>
+                <div>5. 赛博朋克2077</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <strong>全部游戏</strong>
+              <span style="font-size:12px;color:#666">最近更新 · 最新发布</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>游戏1</div>
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>游戏2</div>
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>游戏3</div>
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>游戏4</div>
+            </div>
+            <div class="mock-content">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>方案 B：聚焦推荐型（推荐）</h3>
+      <p>顶部精选推荐区（管理员手动选） + 右侧简单排行榜 + 下方游戏网格。一个排行榜，不拆分时间维度。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>有推荐引导但不臃肿</li><li>排行榜一眼看完</li><li>管理员可控推荐内容</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>需要管理员手动维护精选</li><li>比方案 A 多一些复杂度</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mockup">
+        <div class="mockup-header">方案 C — 纯分类浏览型</div>
+        <div class="mockup-body">
+          <div class="mock-nav" style="display:flex;justify-content:space-between">
+            <span>GameVault</span>
+            <span style="display:flex;gap:10px"><span>首页</span><span>全部</span><span style="color:#3b82f6">🔍</span></span>
+          </div>
+          <div class="mock-content">
+            <div style="text-align:center;padding:30px;margin-bottom:16px">
+              <div style="font-size:24px;font-weight:bold;margin-bottom:8px">找游戏？</div>
+              <div class="mock-input" style="max-width:400px;margin:12px auto">🔍 搜索...</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+              <div class="placeholder" style="padding:30px;text-align:center;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:8px">
+                <div style="font-size:24px">⚔️</div>
+                <div style="font-weight:bold">动作冒险</div>
+                <div style="font-size:12px">8款游戏</div>
+              </div>
+              <div class="placeholder" style="padding:30px;text-align:center;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border-radius:8px">
+                <div style="font-size:24px">🧙</div>
+                <div style="font-weight:bold">角色扮演</div>
+                <div style="font-size:12px">5款游戏</div>
+              </div>
+              <div class="placeholder" style="padding:30px;text-align:center;background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;border-radius:8px">
+                <div style="font-size:24px">🏰</div>
+                <div style="font-weight:bold">策略模拟</div>
+                <div style="font-size:12px">3款游戏</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <strong>最新上架</strong>
+              <span style="font-size:12px;color:#3b82f6">查看全部 →</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>新游戏</div>
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>新游戏</div>
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>新游戏</div>
+              <div class="placeholder" style="aspect-ratio:3/4">🎮<br>新游戏</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>方案 C：分类浏览型</h3>
+      <p>首页突出分类卡片（彩色大块），引导用户按类型浏览。适合资源类型多的站。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>视觉丰富、分类清晰</li><li>用户按兴趣快速筛选</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>分类少时显得空</li><li>对游戏少的站不太合适</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>

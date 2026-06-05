@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
       updateDate: body.updateDate || new Date().toISOString().split('T')[0],
       downloadCount: body.downloadCount || 0,
       isHot: body.isHot || false,
-      isNew: body.isNew !== undefined ? body.isNew : true
+      isNew: body.isNew !== undefined ? body.isNew : true,
+      isFeatured: body.isFeatured !== undefined ? body.isFeatured : false
     })
 
     return NextResponse.json({ success: true, game: newGame }, { status: 201 })

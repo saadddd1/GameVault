@@ -1,0 +1,194 @@
+<h2>首页设计 v2 — 去掉右侧栏 + 移动端</h2>
+<p class="subtitle">排行榜融入排序栏，单栏布局更简洁</p>
+
+<div class="split">
+  <div class="mockup" style="min-width:420px">
+    <div class="mockup-header">桌面端</div>
+    <div class="mockup-body" style="font-size:11px">
+
+      <!-- Header -->
+      <div class="mock-nav" style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:bold;font-size:14px">🎮 GameVault</span>
+        <span style="display:flex;gap:12px;font-size:11px">
+          <span style="color:#3b82f6">首页</span><span>全部游戏</span><span style="color:#3b82f6">🔍</span><span>👤</span>
+        </span>
+      </div>
+
+      <div style="max-width:900px;margin:0 auto">
+
+        <!-- Featured Hero -->
+        <div style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:10px;padding:28px 20px;margin:12px 0;color:white">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:100px;height:140px;background:rgba(255,255,255,0.1);border-radius:6px;flex-shrink:0"> </div>
+            <div style="flex:1">
+              <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px">⭐ 精选推荐</div>
+              <div style="font-size:18px;font-weight:bold;margin-bottom:6px">黑神话：悟空</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:10px">以中国神话为背景的动作角色扮演游戏。你将扮演一位"天命人"，探寻西游之路。</div>
+              <span style="background:white;color:#0f3460;padding:6px 16px;border-radius:4px;font-size:11px;font-weight:500">立即下载</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;justify-content:center;margin-top:12px">
+            <span style="width:6px;height:6px;background:white;border-radius:50%"></span>
+            <span style="width:6px;height:6px;background:rgba(255,255,255,0.3);border-radius:50%"></span>
+            <span style="width:6px;height:6px;background:rgba(255,255,255,0.3);border-radius:50%"></span>
+          </div>
+        </div>
+
+        <!-- Sort + filter bar (merged ranking) -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;background:white;padding:10px 14px;border-radius:8px;border:1px solid #eee">
+          <div style="display:flex;gap:16px;font-size:12px">
+            <span style="color:#3b82f6;font-weight:500;padding-bottom:4px;border-bottom:2px solid #3b82f6">🏆 下载排行</span>
+            <span style="color:#999">🕐 最新上架</span>
+            <span style="color:#999">⭐ 精选推荐</span>
+          </div>
+          <div style="font-size:11px;color:#999">共 10 款游戏</div>
+        </div>
+
+        <!-- Game grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
+          <div style="background:white;border:1px solid #eee;border-radius:8px;overflow:hidden">
+            <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:9px">
+              <div style="font-size:24px">🎮</div>
+              赛博朋克2077<br><span style="color:#999">70GB · RPG · 1.5W次</span>
+            </div>
+          </div>
+          <div style="background:white;border:1px solid #eee;border-radius:8px;overflow:hidden">
+            <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:9px">
+              <div style="font-size:24px">⚔️</div>
+              艾尔登法环<br><span style="color:#999">50GB · 动作 · 1.2W次</span>
+            </div>
+          </div>
+          <div style="background:white;border:1px solid #eee;border-radius:8px;overflow:hidden">
+            <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:9px">
+              <div style="font-size:24px">🚗</div>
+              GTA5<br><span style="color:#999">110GB · 动作 · 3.0W次</span>
+            </div>
+          </div>
+          <div style="background:white;border:1px solid #eee;border-radius:8px;overflow:hidden">
+            <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:9px">
+              <div style="font-size:24px">🐉</div>
+              原神<br><span style="color:#999">65GB · RPG · 2.0W次</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" style="min-width:280px;max-width:320px">
+    <div class="mockup-header">移动端</div>
+    <div class="mockup-body" style="font-size:10px">
+
+      <!-- Mobile header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+        <span style="font-weight:bold;font-size:13px">🎮 GameVault</span>
+        <span style="font-size:14px">🔍</span>
+      </div>
+
+      <!-- Featured - compact -->
+      <div style="background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);border-radius:8px;padding:16px 12px;margin:8px 0;color:white">
+        <div style="font-size:9px;color:rgba(255,255,255,0.5);margin-bottom:2px">⭐ 精选推荐</div>
+        <div style="font-size:14px;font-weight:bold;margin-bottom:4px">黑神话：悟空</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:8px;line-height:1.4">以中国神话为背景的动作角色扮演游戏...</div>
+        <span style="background:white;color:#0f3460;padding:4px 12px;border-radius:4px;font-size:10px;font-weight:500">立即下载</span>
+        <div style="display:flex;gap:4px;justify-content:center;margin-top:8px">
+          <span style="width:4px;height:4px;background:white;border-radius:50%"></span>
+          <span style="width:4px;height:4px;background:rgba(255,255,255,0.3);border-radius:50%"></span>
+          <span style="width:4px;height:4px;background:rgba(255,255,255,0.3);border-radius:50%"></span>
+        </div>
+      </div>
+
+      <!-- Sort tabs - scrollable -->
+      <div style="display:flex;gap:8px;margin-bottom:8px;font-size:10px;overflow-x:auto;padding:8px 0">
+        <span style="background:#3b82f6;color:white;padding:4px 10px;border-radius:12px;white-space:nowrap;font-size:9px">🏆 下载排行</span>
+        <span style="background:#f1f5f9;color:#666;padding:4px 10px;border-radius:12px;white-space:nowrap;font-size:9px">🕐 最新上架</span>
+        <span style="background:#f1f5f9;color:#666;padding:4px 10px;border-radius:12px;white-space:nowrap;font-size:9px">⭐ 精选</span>
+      </div>
+
+      <!-- 2-column game grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:white;border:1px solid #eee;border-radius:6px;overflow:hidden">
+          <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:8px">
+            <div style="font-size:18px">🎮</div>
+            赛博朋克2077<br><span style="color:#999">70GB · RPG</span>
+          </div>
+        </div>
+        <div style="background:white;border:1px solid #eee;border-radius:6px;overflow:hidden">
+          <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:8px">
+            <div style="font-size:18px">⚔️</div>
+            艾尔登法环<br><span style="color:#999">50GB · 动作</span>
+          </div>
+        </div>
+        <div style="background:white;border:1px solid #eee;border-radius:6px;overflow:hidden">
+          <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:8px">
+            <div style="font-size:18px">🚗</div>
+            GTA5<br><span style="color:#999">110GB · 动作</span>
+          </div>
+        </div>
+        <div style="background:white;border:1px solid #eee;border-radius:6px;overflow:hidden">
+          <div class="placeholder" style="aspect-ratio:3/4;border-radius:0;font-size:8px">
+            <div style="font-size:18px">🐉</div>
+            原神<br><span style="color:#999">65GB · RPG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile bottom nav -->
+      <div style="display:flex;justify-content:space-around;padding:8px 0;margin-top:8px;border-top:1px solid #eee;font-size:9px;color:#666">
+        <span style="color:#3b82f6">🏠 首页</span>
+        <span>🎮 游戏</span>
+        <span>👤 我的</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top:20px">设计要点</h3>
+<div class="section" style="font-size:12px">
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+  <div style="background:#f0fdf4;padding:12px;border-radius:6px;border:1px solid #bbf7d0">
+    <strong style="color:#16a34a">桌面端</strong>
+    <ul style="margin:6px 0 0;padding-left:16px;font-size:11px">
+      <li>精选大图 Hero（管理员标记）</li>
+      <li>排序栏：下载排行 / 最新上架 / 精选 — 点击筛选</li>
+      <li>4 列游戏网格</li>
+      <li>无右侧栏</li>
+    </ul>
+  </div>
+  <div style="background:#eff6ff;padding:12px;border-radius:6px;border:1px solid #bfdbfe">
+    <strong style="color:#2563eb">移动端</strong>
+    <ul style="margin:6px 0 0;padding-left:16px;font-size:11px">
+      <li>精选 Hero 等比缩小</li>
+      <li>排序改为圆角 pill 标签，可左右滑动</li>
+      <li>2 列游戏网格</li>
+      <li>底部固定导航栏</li>
+    </ul>
+  </div>
+</div>
+
+<div style="background:#fefce8;padding:12px;border-radius:6px;border:1px solid #fde68a;font-size:11px">
+  <strong>后端改动</strong>：Game 模型新增 <code>isFeatured</code> 字段，管理员在后台勾选"精选"即可出现在首页 Hero 区。
+</div>
+
+</div>
+
+<div class="options" style="margin-top:16px">
+  <p class="subtitle">这个方案可以吗？</p>
+  <div class="option" data-choice="yes" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>可以，就这样</h3>
+      <p>开始实现</p>
+    </div>
+  </div>
+  <div class="option" data-choice="tweak" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>还需要调整</h3>
+      <p>我会在终端说明要改什么</p>
+    </div>
+  </div>
+</div>
