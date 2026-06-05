@@ -45,6 +45,9 @@ export default function Header() {
             <Link href="/games" className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${pathname === '/games' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}>
               全部游戏
             </Link>
+            <Link href="/tools" className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${pathname === '/tools' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}>
+              开源工具
+            </Link>
             {isAdmin && (
               <Link href="/admin" className="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-all">
                 管理后台
@@ -153,6 +156,12 @@ export default function Header() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             游戏
+          </Link>
+          <Link href="/tools" className="flex flex-col items-center px-3 py-1 text-xs text-gray-600 hover:text-blue-600">
+            <svg className="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            工具
           </Link>
           <Link href="/login" className="flex flex-col items-center px-3 py-1 text-xs text-gray-600 hover:text-blue-600">
             <svg className="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

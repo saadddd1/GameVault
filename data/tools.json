@@ -1,0 +1,125 @@
+{
+  "tools": [
+    {
+      "id": 1,
+      "name": "Godot Engine",
+      "description": "功能完整的跨平台开源游戏引擎，支持2D和3D游戏开发，拥有可视化编辑器和自己的脚本语言 GDScript。",
+      "url": "https://github.com/godotengine/godot",
+      "stars": "95k+",
+      "category": "游戏引擎",
+      "language": "C++",
+      "tags": ["引擎", "2D", "3D", "跨平台"]
+    },
+    {
+      "id": 2,
+      "name": "pixi.js",
+      "description": "最快的2D WebGL渲染引擎，用于创建交互式图形、游戏和动画，HTML5游戏开发首选。",
+      "url": "https://github.com/pixijs/pixijs",
+      "stars": "44k+",
+      "category": "游戏引擎",
+      "language": "TypeScript",
+      "tags": ["WebGL", "2D", "HTML5", "渲染"]
+    },
+    {
+      "id": 3,
+      "name": "Phaser",
+      "description": "快速、免费的HTML5游戏框架，支持WebGL和Canvas渲染，适合桌面和移动端网页游戏开发。",
+      "url": "https://github.com/phaserjs/phaser",
+      "stars": "37k+",
+      "category": "游戏框架",
+      "language": "JavaScript",
+      "tags": ["HTML5", "2D", "WebGL", "移动端"]
+    },
+    {
+      "id": 4,
+      "name": "yuzu",
+      "description": "Nintendo Switch 模拟器，由 Citra 团队开发，支持大量 Switch 游戏在高分辨率下运行。",
+      "url": "https://github.com/yuzu-emu/yuzu",
+      "stars": "40k+",
+      "category": "模拟器",
+      "language": "C++",
+      "tags": ["Switch", "模拟器", "跨平台"]
+    },
+    {
+      "id": 5,
+      "name": "Ryujinx",
+      "description": "用C#编写的 Nintendo Switch 模拟器，注重准确性和性能，支持大量游戏完美运行。",
+      "url": "https://github.com/Ryujinx/Ryujinx",
+      "stars": "35k+",
+      "category": "模拟器",
+      "language": "C#",
+      "tags": ["Switch", "模拟器", "跨平台"]
+    },
+    {
+      "id": 6,
+      "name": "Lutris",
+      "description": "Linux 开源游戏管理平台，统一管理 Steam、GOG、Epic 等平台游戏，支持 Wine/Proton 运行 Windows 游戏。",
+      "url": "https://github.com/lutris/lutris",
+      "stars": "8k+",
+      "category": "游戏工具",
+      "language": "Python",
+      "tags": ["Linux", "启动器", "Wine", "跨平台"]
+    },
+    {
+      "id": 7,
+      "name": "Heroic Games Launcher",
+      "description": "开源的 Epic Games、GOG 和 Amazon Games 启动器，支持 Linux、macOS 和 Windows。",
+      "url": "https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher",
+      "stars": "8k+",
+      "category": "游戏工具",
+      "language": "TypeScript",
+      "tags": ["启动器", "Epic", "GOG", "跨平台"]
+    },
+    {
+      "id": 8,
+      "name": "Bottles",
+      "description": "Linux 下用 Wine 运行 Windows 软件和游戏的图形化管理工具，一键配置游戏环境。",
+      "url": "https://github.com/bottlesdevs/Bottles",
+      "stars": "6k+",
+      "category": "游戏工具",
+      "language": "Python",
+      "tags": ["Linux", "Wine", "游戏兼容"]
+    },
+    {
+      "id": 9,
+      "name": "OpenRA",
+      "description": "开源的红警系列即时战略游戏引擎，支持 Command & Conquer、Red Alert、Dune 2000 三大经典。",
+      "url": "https://github.com/OpenRA/OpenRA",
+      "stars": "15k+",
+      "category": "游戏引擎",
+      "language": "C#",
+      "tags": ["RTS", "经典复刻", "跨平台"]
+    },
+    {
+      "id": 10,
+      "name": "Cemu",
+      "description": "Wii U 模拟器，支持 4K 分辨率、MOD、纹理包，大量 Wii U 游戏可完美运行于 PC。",
+      "url": "https://github.com/cemu-project/Cemu",
+      "stars": "5k+",
+      "category": "模拟器",
+      "language": "C++",
+      "tags": ["Wii U", "模拟器", "4K"]
+    },
+    {
+      "id": 11,
+      "name": "LibGDX",
+      "description": "Java 游戏开发框架，一次编写即可部署到 Windows、Linux、macOS、Android、iOS 和 Web。",
+      "url": "https://github.com/libgdx/libgdx",
+      "stars": "23k+",
+      "category": "游戏框架",
+      "language": "Java",
+      "tags": ["跨平台", "2D", "3D", "Java"]
+    },
+    {
+      "id": 12,
+      "name": "MonoGame",
+      "description": "Microsoft XNA 框架的开源实现，用于开发跨平台 2D/3D 游戏，Stardew Valley 等知名作品基于此开发。",
+      "url": "https://github.com/MonoGame/MonoGame",
+      "stars": "12k+",
+      "category": "游戏框架",
+      "language": "C#",
+      "tags": ["跨平台", "XNA", "2D", "3D"]
+    }
+  ],
+  "categories": ["全部", "游戏引擎", "游戏框架", "模拟器", "游戏工具"]
+}

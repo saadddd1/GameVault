@@ -41,8 +41,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/games?sort=new" className="text-sm hover:text-white transition-colors">
-                  最新上架
+                <Link href="/tools" className="text-sm hover:text-white transition-colors">
+                  开源工具
                 </Link>
               </li>
             </ul>
