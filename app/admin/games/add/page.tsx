@@ -4,12 +4,28 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAuthHeaders } from '@/components/AuthProvider'
 
+interface GameMeta {
+  id: number
+  name: string
+  nameEn: string
+  description: string
+  cover: string
+  size: string
+  category: string
+  releaseDate: string
+}
+
 export default function AddGamePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [categories, setCategories] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<GameMeta[]>([])
+  const [searching, setSearching] = useState(false)
+  const [autoFilling, setAutoFilling] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -44,6 +60,38 @@ export default function AddGamePage() {
   useEffect(() => {
     fetchCategories()
   }, [])
+
+  const handleGameSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!searchQuery.trim()) return
+    setSearching(true)
+    setSearchResults([])
+    try {
+      const res = await fetch(`/api/game-search?q=${encodeURIComponent(searchQuery.trim())}`)
+      const data = await res.json()
+      if (data.games) {
+        setSearchResults(data.games)
+      }
+    } catch {
+      setError('搜索失败')
+    } finally {
+      setSearching(false)
+    }
+  }
+
+  const handleGameSelect = (game: GameMeta) => {
+    setFormData(prev => ({
+      ...prev,
+      title: game.name,
+      description: game.description.slice(0, 1000),
+      coverImage: game.cover || '',
+      size: game.size || '',
+      category: game.category || prev.category
+    }))
+    setSearchResults([])
+    setSearchQuery('')
+    setShowSearch(false)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -139,6 +187,83 @@ export default function AddGamePage() {
       )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* 快速填充 */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-5 border border-blue-100">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span className="font-semibold text-gray-900">快速填充</span>
+              <span className="text-xs text-gray-500">搜索游戏名，自动填写信息</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => { setShowSearch(!showSearch); setSearchResults([]); setSearchQuery('') }}
+              className="text-xs text-blue-500 hover:text-blue-600"
+            >
+              {showSearch ? '收起' : '展开'}
+            </button>
+          </div>
+
+          {showSearch && (
+            <div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleGameSearch(e) } }}
+                  placeholder="输入游戏名（支持中英文搜索）..."
+                  className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={handleGameSearch}
+                  disabled={searching || !searchQuery.trim()}
+                  className="px-4 py-2.5 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 disabled:opacity-50"
+                >
+                  {searching ? '搜索中...' : '搜索'}
+                </button>
+              </div>
+
+              {searchResults.length > 0 && (
+                <div className="mt-3 bg-white rounded-lg border border-gray-200 overflow-hidden max-h-64 overflow-y-auto">
+                  {searchResults.map((game) => (
+                    <button
+                      key={game.id}
+                      type="button"
+                      onClick={() => handleGameSelect(game)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition-colors text-left border-b border-gray-50 last:border-0"
+                    >
+                      <div className="w-10 h-14 rounded bg-gray-100 flex-shrink-0 overflow-hidden">
+                        {game.cover ? (
+                          <img src={game.cover} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-lg">🎮</div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-gray-900 truncate">{game.name}</div>
+                        <div className="text-xs text-gray-400 mt-0.5">{game.nameEn} · {game.size} · {game.category}</div>
+                      </div>
+                      <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {autoFilling && (
+                <div className="mt-3 text-center text-sm text-blue-600">
+                  正在填充...
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* 基本信息 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
