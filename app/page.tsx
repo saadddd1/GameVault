@@ -208,7 +208,7 @@ export default function HomePage() {
                 {newGames.slice(0, 5).map((game) => (
                   <Link key={game.id} href={`/games/${game.id}`} className="group">
                     <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-200">
-                      {game.coverImage && game.coverImage !== '/images/default.jpg' ? (
+                      {game.coverImage && game.coverImage !== '/images/default.svg' ? (
                         <img src={game.coverImage} alt={game.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
@@ -258,7 +258,7 @@ export default function HomePage() {
                       <div className="flex">
                         {/* 封面 */}
                         <div className="w-28 h-36 flex-shrink-0 bg-gray-200">
-                          {game.coverImage && game.coverImage !== '/images/default.jpg' ? (
+                          {game.coverImage && game.coverImage !== '/images/default.svg' ? (
                             <img src={game.coverImage} alt={game.title} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
@@ -304,7 +304,7 @@ export default function HomePage() {
                 {games.slice(0, 5).map((game) => (
                   <Link key={game.id} href={`/games/${game.id}`} className="flex items-center gap-3 group">
                     <div className="w-12 h-12 rounded bg-gray-200 flex-shrink-0 overflow-hidden">
-                      {game.coverImage && game.coverImage !== '/images/default.jpg' ? (
+                      {game.coverImage && game.coverImage !== '/images/default.svg' ? (
                         <img src={game.coverImage} alt={game.title} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100"></div>

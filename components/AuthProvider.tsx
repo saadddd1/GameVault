@@ -16,22 +16,31 @@ interface AuthContextType {
   logout: () => void
   isAdmin: boolean
   isLoading: boolean
+  getToken: () => string | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export function getAuthHeaders(): Record<string, string> {
+  if (typeof window === 'undefined') return { 'Content-Type': 'application/json' }
+  const token = localStorage.getItem('token')
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (token) headers['Authorization'] = `Bearer ${token}`
+  return headers
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // 从 localStorage 恢复登录状态
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser))
       } catch {
         localStorage.removeItem('user')
+        localStorage.removeItem('token')
       }
     }
     setIsLoading(false)
@@ -44,12 +53,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'login', username, password })
       })
-      
+
       const data = await response.json()
-      
+
       if (data.success) {
         setUser(data.user)
         localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('token', data.token)
         return true
       }
       return false
@@ -65,12 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'register', username, email, password })
       })
-      
+
       const data = await response.json()
-      
+
       if (data.success) {
         setUser(data.user)
         localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('token', data.token)
         return true
       }
       return false
@@ -82,7 +93,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null)
     localStorage.removeItem('user')
+    localStorage.removeItem('token')
   }
+
+  const getToken = () => localStorage.getItem('token')
 
   return (
     <AuthContext.Provider value={{
@@ -91,7 +105,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       logout,
       isAdmin: user?.role === 'admin',
-      isLoading
+      isLoading,
+      getToken
     }}>
       {children}
     </AuthContext.Provider>

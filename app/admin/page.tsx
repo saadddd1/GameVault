@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { getAuthHeaders } from '@/components/AuthProvider'
 
 interface Stats {
   totalGames: number
@@ -25,7 +26,7 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/stats')
+      const response = await fetch('/api/stats', { headers: getAuthHeaders() })
       const data = await response.json()
       setStats(data)
     } catch (error) {

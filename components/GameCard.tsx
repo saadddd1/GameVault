@@ -11,7 +11,7 @@ export default function GameCard({ game }: GameCardProps) {
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-transparent">
         {/* 封面图 */}
         <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-          {game.coverImage && game.coverImage !== '/images/default.jpg' ? (
+          {game.coverImage && game.coverImage !== '/images/default.svg' ? (
             <img
               src={game.coverImage}
               alt={game.title}

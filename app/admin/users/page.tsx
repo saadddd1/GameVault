@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { getAuthHeaders } from '@/components/AuthProvider'
 
 interface User {
   id: number
@@ -20,7 +21,7 @@ export default function UsersManagePage() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/users')
+      const response = await fetch('/api/users', { headers: getAuthHeaders() })
       const data = await response.json()
       if (data.users) {
         setUsers(data.users)

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import Link from 'next/link'
+import { getAuthHeaders } from '@/components/AuthProvider'
 
 interface ImportResult {
   total: number
@@ -49,8 +50,10 @@ export default function ImportGamesPage() {
       const formData = new FormData()
       formData.append('file', file)
 
+      const token = localStorage.getItem('token')
       const response = await fetch('/api/games/import', {
         method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData
       })
 

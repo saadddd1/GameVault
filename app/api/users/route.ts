@@ -1,14 +1,13 @@
-import { NextResponse } from 'next/server'
-import { getAllUsers } from '@/lib/auth'
+import { NextRequest, NextResponse } from 'next/server'
+import { getSafeUsers, requireAdmin } from '@/lib/auth'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (!requireAdmin(request)) {
+    return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
+  }
   try {
-    const { users } = getAllUsers()
-    
-    // 不返回密码字段
-    const safeUsers = users.map(({ password, ...user }) => user)
-    
-    return NextResponse.json({ users: safeUsers })
+    const users = getSafeUsers()
+    return NextResponse.json({ users })
   } catch (error) {
     return NextResponse.json(
       { error: '获取用户列表失败' },

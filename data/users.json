@@ -4,7 +4,7 @@
       "id": 1,
       "username": "admin",
       "email": "admin@game.com",
-      "password": "admin123",
+      "password": "$2b$10$/xpp23GiRUfqstkHHkuKcO4IfWNM/rfa83aPIouwmGI.Njj9SXCOG",
       "role": "admin",
       "createdAt": "2026-01-01T00:00:00.000Z"
     }

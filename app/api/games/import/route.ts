@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { addGame, getAllGames } from '@/lib/games'
+import { requireAdmin } from '@/lib/auth'
 import * as XLSX from 'xlsx'
 
 export async function POST(request: NextRequest) {
+  if (!requireAdmin(request)) {
+    return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
+  }
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
@@ -97,7 +101,7 @@ export async function POST(request: NextRequest) {
         addGame({
           title: String(title),
           description: String(description),
-          coverImage: row['封面图片'] ? String(row['封面图片']) : '/images/default.jpg',
+          coverImage: row['封面图片'] ? String(row['封面图片']) : '/images/default.svg',
           size: String(size),
           category: String(category),
           downloadLinks,

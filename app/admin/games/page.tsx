@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { getAuthHeaders } from '@/components/AuthProvider'
 
 interface Game {
   id: number
@@ -43,7 +44,8 @@ export default function GamesManagePage() {
     
     try {
       const response = await fetch(`/api/games?id=${deleteId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: getAuthHeaders()
       })
       
       if (response.ok) {
@@ -163,10 +165,10 @@ export default function GamesManagePage() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex gap-2">
                     <Link
-                      href={`/games/${game.id}`}
-                      className="text-blue-600 hover:text-blue-900"
+                      href={`/admin/games/${game.id}/edit`}
+                      className="text-green-600 hover:text-green-900"
                     >
-                      查看
+                      编辑
                     </Link>
                     <button
                       onClick={() => {

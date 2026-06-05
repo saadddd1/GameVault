@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { getAuthHeaders } from '@/components/AuthProvider'
 
 export default function AddGamePage() {
   const router = useRouter()
@@ -97,7 +98,7 @@ export default function AddGamePage() {
 
       const response = await fetch('/api/games', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify(gameData)
       })
 

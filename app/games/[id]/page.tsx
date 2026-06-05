@@ -111,7 +111,7 @@ export default function GameDetailPage() {
             {/* 封面图 */}
             <div className="lg:w-80 flex-shrink-0">
               <div className="relative aspect-[3/4] lg:aspect-auto lg:h-full bg-gradient-to-br from-gray-100 to-gray-200">
-                {game.coverImage && game.coverImage !== '/images/default.jpg' ? (
+                {game.coverImage && game.coverImage !== '/images/default.svg' ? (
                   <img
                     src={game.coverImage}
                     alt={game.title}
@@ -202,7 +202,7 @@ export default function GameDetailPage() {
                           </div>
                         </div>
                         <a
-                          href={link.url}
+                          href={`/api/download?id=${game.id}&index=${index}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="px-6 py-2.5 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors text-center"
