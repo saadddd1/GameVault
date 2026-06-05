@@ -96,7 +96,6 @@ export function isAdmin(userId: number): boolean {
   return user?.role === 'admin'
 }
 
-const SECRET = crypto.randomBytes(32).toString('hex')
 let _secret: string | null = null
 
 function getSecret(): string {

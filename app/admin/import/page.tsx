@@ -2,7 +2,6 @@
 
 import { useState, useRef } from 'react'
 import Link from 'next/link'
-import { getAuthHeaders } from '@/components/AuthProvider'
 
 interface ImportResult {
   total: number
@@ -68,7 +67,7 @@ export default function ImportGamesPage() {
       } else {
         setError(data.error || '导入失败')
       }
-    } catch (err) {
+    } catch {
       setError('导入失败，请重试')
     } finally {
       setImporting(false)

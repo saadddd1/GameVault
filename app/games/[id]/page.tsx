@@ -22,6 +22,7 @@ interface Game {
   downloadCount: number
   isHot: boolean
   isNew: boolean
+  isFeatured: boolean
 }
 
 export default function GameDetailPage() {
@@ -30,10 +31,6 @@ export default function GameDetailPage() {
   const [game, setGame] = useState<Game | null>(null)
   const [loading, setLoading] = useState(true)
   const [showPasswords, setShowPasswords] = useState<{ [key: number]: boolean }>({})
-
-  useEffect(() => {
-    fetchGame()
-  }, [params.id])
 
   const fetchGame = async () => {
     try {
@@ -49,6 +46,11 @@ export default function GameDetailPage() {
       setLoading(false)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchGame()
+  }, [params.id])
 
   const togglePassword = (index: number) => {
     setShowPasswords(prev => ({ ...prev, [index]: true }))

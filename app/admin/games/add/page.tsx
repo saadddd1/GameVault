@@ -28,10 +28,6 @@ export default function AddGamePage() {
     isFeatured: false
   })
 
-  useEffect(() => {
-    fetchCategories()
-  }, [])
-
   const fetchCategories = async () => {
     try {
       const response = await fetch('/api/games')
@@ -43,6 +39,11 @@ export default function AddGamePage() {
       console.error('获取分类失败:', error)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target

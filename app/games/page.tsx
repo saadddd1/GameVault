@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, Suspense } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import GameCard from '@/components/GameCard'
 
@@ -21,6 +22,7 @@ interface Game {
   downloadCount: number
   isHot: boolean
   isNew: boolean
+  isFeatured: boolean
 }
 
 function GamesContent() {
@@ -32,10 +34,6 @@ function GamesContent() {
   const [games, setGames] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<string>(sort || 'default')
-
-  useEffect(() => {
-    fetchGames()
-  }, [])
 
   const fetchGames = async () => {
     try {
@@ -50,6 +48,11 @@ function GamesContent() {
       setLoading(false)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchGames()
+  }, [])
 
   // 筛选和排序游戏
   const filteredGames = games
@@ -134,9 +137,9 @@ function GamesContent() {
             </svg>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">没有找到游戏</h2>
             <p className="text-gray-500 mb-6">尝试更换筛选条件或搜索关键词</p>
-            <a href="/games" className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+            <Link href="/games" className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
               查看全部游戏
-            </a>
+            </Link>
           </div>
         )}
       </div>

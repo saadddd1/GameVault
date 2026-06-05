@@ -15,10 +15,6 @@ export default function UsersManagePage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
   const fetchUsers = async () => {
     try {
       const response = await fetch('/api/users', { headers: getAuthHeaders() })
@@ -32,6 +28,11 @@ export default function UsersManagePage() {
       setLoading(false)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
   if (loading) {
     return (

@@ -20,10 +20,6 @@ export default function AdminDashboard() {
   })
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchStats()
-  }, [])
-
   const fetchStats = async () => {
     try {
       const response = await fetch('/api/stats', { headers: getAuthHeaders() })
@@ -35,6 +31,11 @@ export default function AdminDashboard() {
       setLoading(false)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchStats()
+  }, [])
 
   const statCards = [
     {

@@ -65,9 +65,10 @@ export async function POST(request: NextRequest) {
       { error: '无效的操作' },
       { status: 400 }
     )
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : '服务器错误'
     return NextResponse.json(
-      { error: error.message || '服务器错误' },
+      { error: message },
       { status: 500 }
     )
   }

@@ -26,10 +26,6 @@ export default function EditGamePage() {
     isFeatured: false
   })
 
-  useEffect(() => {
-    fetchGameAndCategories()
-  }, [])
-
   const fetchGameAndCategories = async () => {
     try {
       const response = await fetch('/api/games')
@@ -59,6 +55,11 @@ export default function EditGamePage() {
       setFetching(false)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchGameAndCategories()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target

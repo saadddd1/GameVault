@@ -12,6 +12,7 @@ interface Game {
   downloadCount: number
   isHot: boolean
   isNew: boolean
+  isFeatured: boolean
   updateDate: string
 }
 
@@ -20,10 +21,6 @@ export default function GamesManagePage() {
   const [loading, setLoading] = useState(true)
   const [deleteId, setDeleteId] = useState<number | null>(null)
   const [showConfirm, setShowConfirm] = useState(false)
-
-  useEffect(() => {
-    fetchGames()
-  }, [])
 
   const fetchGames = async () => {
     try {
@@ -38,6 +35,11 @@ export default function GamesManagePage() {
       setLoading(false)
     }
   }
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    fetchGames()
+  }, [])
 
   const handleDelete = async () => {
     if (!deleteId) return
