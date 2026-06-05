@@ -24,7 +24,8 @@ export default function AddGamePage() {
     url2: '',
     password2: '',
     isHot: false,
-    isNew: true
+    isNew: true,
+    isFeatured: false
   })
 
   useEffect(() => {
@@ -93,7 +94,8 @@ export default function AddGamePage() {
         updateDate: new Date().toISOString().split('T')[0],
         downloadCount: 0,
         isHot: formData.isHot,
-        isNew: formData.isNew
+        isNew: formData.isNew,
+        isFeatured: formData.isFeatured
       }
 
       const response = await fetch('/api/games', {
@@ -327,6 +329,17 @@ export default function AddGamePage() {
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">标记为新游</span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="isFeatured"
+                checked={formData.isFeatured}
+                onChange={handleChange}
+                className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+              />
+              <span className="text-sm text-gray-700">标记为精选</span>
             </label>
           </div>
         </div>

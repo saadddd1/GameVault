@@ -22,7 +22,8 @@ export default function EditGamePage() {
     releaseDate: '',
     downloadLinks: [] as { platform: string; url: string; password: string }[],
     isHot: false,
-    isNew: false
+    isNew: false,
+    isFeatured: false
   })
 
   useEffect(() => {
@@ -46,7 +47,8 @@ export default function EditGamePage() {
           releaseDate: game.releaseDate,
           downloadLinks: game.downloadLinks || [],
           isHot: game.isHot,
-          isNew: game.isNew
+          isNew: game.isNew,
+          isFeatured: game.isFeatured || false
         })
       } else {
         setError('游戏不存在')
@@ -117,7 +119,8 @@ export default function EditGamePage() {
           releaseDate: formData.releaseDate,
           updateDate: new Date().toISOString().split('T')[0],
           isHot: formData.isHot,
-          isNew: formData.isNew
+          isNew: formData.isNew,
+          isFeatured: formData.isFeatured
         })
       })
 
@@ -335,6 +338,17 @@ export default function EditGamePage() {
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">标记为新游</span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="isFeatured"
+                checked={formData.isFeatured}
+                onChange={handleChange}
+                className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+              />
+              <span className="text-sm text-gray-700">标记为精选</span>
             </label>
           </div>
         </div>

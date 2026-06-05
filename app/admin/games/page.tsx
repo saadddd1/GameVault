@@ -157,6 +157,11 @@ export default function GamesManagePage() {
                         新游
                       </span>
                     )}
+                    {game.isFeatured && (
+                      <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+                        精选
+                      </span>
+                    )}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
