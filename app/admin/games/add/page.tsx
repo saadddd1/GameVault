@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAuthHeaders } from '@/components/AuthProvider'
 
+interface SteamItem {
+  id: number
+  name: string
+  tiny_image: string
+}
+
 interface GameMeta {
   id: number
   name: string
@@ -12,7 +18,6 @@ interface GameMeta {
   cover: string
   size: string
   category: string
-  releaseDate: string
 }
 
 export default function AddGamePage() {
@@ -21,11 +26,13 @@ export default function AddGamePage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [categories, setCategories] = useState<string[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<GameMeta[]>([])
+  const [steamQuery, setSteamQuery] = useState('')
+  const [steamResults, setSteamResults] = useState<SteamItem[]>([])
+  const [localResults, setLocalResults] = useState<GameMeta[]>([])
   const [searching, setSearching] = useState(false)
-  const [autoFilling, setAutoFilling] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
+  const [filling, setFilling] = useState(false)
+  const [steamError, setSteamError] = useState('')
+  const [showSearch, setShowSearch] = useState(true)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -61,35 +68,89 @@ export default function AddGamePage() {
     fetchCategories()
   }, [])
 
-  const handleGameSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!searchQuery.trim()) return
+  const handleSearch = async () => {
+    const q = steamQuery.trim()
+    if (!q) return
     setSearching(true)
-    setSearchResults([])
+    setSteamError('')
+    setSteamResults([])
+    setLocalResults([])
+
+    // 1. Steam 搜索
     try {
-      const res = await fetch(`/api/game-search?q=${encodeURIComponent(searchQuery.trim())}`)
+      const res = await fetch(`/api/steam/search?q=${encodeURIComponent(q)}`)
       const data = await res.json()
-      if (data.games) {
-        setSearchResults(data.games)
+      if (data.items?.length) {
+        setSteamResults(data.items.slice(0, 8))
+      } else if (data.error) {
+        setSteamError(data.error)
       }
     } catch {
-      setError('搜索失败')
+      setSteamError('Steam 连接失败')
+    }
+
+    // 2. 本地数据库搜索（始终作为补充）
+    try {
+      const res = await fetch(`/api/game-search?q=${encodeURIComponent(q)}`)
+      const data = await res.json()
+      if (data.games?.length) {
+        setLocalResults(data.games)
+      }
+    } catch { /* ignore */ }
+
+    setSearching(false)
+  }
+
+  const handleSteamSelect = async (item: SteamItem) => {
+    setFilling(true)
+    setSteamResults([])
+    setSteamQuery('')
+    try {
+      const res = await fetch(`/api/steam/app?id=${item.id}`)
+      const data = await res.json()
+      if (data.name) {
+        // 下载封面图到本地
+        let localCover = data.cover || ''
+        if (localCover) {
+          try {
+            const imgRes = await fetch('/api/steam/download-image', {
+              method: 'POST',
+              headers: getAuthHeaders(),
+              body: JSON.stringify({ url: localCover, filename: data.name })
+            })
+            const imgData = await imgRes.json()
+            if (imgData.path) localCover = imgData.path
+          } catch { /* 保留原始URL */ }
+        }
+
+        setFormData(prev => ({
+          ...prev,
+          title: data.name,
+          description: data.description?.slice(0, 1000) || '',
+          coverImage: localCover,
+          size: data.size || '',
+          category: data.genres?.[0] || prev.category
+        }))
+        setShowSearch(false)
+      }
+    } catch {
+      setError('获取 Steam 详情失败')
     } finally {
-      setSearching(false)
+      setFilling(false)
     }
   }
 
-  const handleGameSelect = (game: GameMeta) => {
+  const handleLocalSelect = (game: GameMeta) => {
     setFormData(prev => ({
       ...prev,
       title: game.name,
-      description: game.description.slice(0, 1000),
+      description: game.description?.slice(0, 1000) || '',
       coverImage: game.cover || '',
       size: game.size || '',
       category: game.category || prev.category
     }))
-    setSearchResults([])
-    setSearchQuery('')
+    setLocalResults([])
+    setSteamQuery('')
     setShowSearch(false)
   }
 
@@ -187,20 +248,20 @@ export default function AddGamePage() {
       )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* 快速填充 */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-5 border border-blue-100">
+        {/* Steam 搜索 + 本地库 */}
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-5 text-white">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.972 1.35C5.914 1.35.983 6.281.983 12.34c0 4.86 3.16 8.98 7.54 10.44.55.1.75-.24.75-.53l-.01-1.9c-3.07.67-3.71-1.47-3.71-1.47-.5-1.28-1.23-1.62-1.23-1.62-1-.68.08-.67.08-.67 1.11.08 1.7 1.14 1.7 1.14.99 1.69 2.59 1.2 3.22.92.1-.72.39-1.2.7-1.48-2.45-.28-5.03-1.23-5.03-5.46 0-1.21.43-2.19 1.14-2.97-.12-.28-.5-1.4.1-2.93 0 0 .93-.3 3.06 1.14a10.66 10.66 0 015.56 0c2.12-1.44 3.05-1.14 3.05-1.14.6 1.53.22 2.65.11 2.93.71.78 1.13 1.76 1.13 2.97 0 4.24-2.59 5.18-5.05 5.45.4.34.75 1.01.75 2.04l-.01 3.03c0 .29.2.64.75.53a10.99 10.99 0 005.55-21.47c-1.17-2.22-3.36-3.89-5.85-4.55"/>
               </svg>
-              <span className="font-semibold text-gray-900">快速填充</span>
-              <span className="text-xs text-gray-500">搜索游戏名，自动填写信息</span>
+              <span className="font-semibold">Steam 导入</span>
+              <span className="text-xs text-white/60">搜索结果自动下载封面到本地</span>
             </div>
             <button
               type="button"
-              onClick={() => { setShowSearch(!showSearch); setSearchResults([]); setSearchQuery('') }}
-              className="text-xs text-blue-500 hover:text-blue-600"
+              onClick={() => { setShowSearch(!showSearch); setSteamResults([]); setLocalResults([]); setSteamQuery('') }}
+              className="text-xs text-white/70 hover:text-white"
             >
               {showSearch ? '收起' : '展开'}
             </button>
@@ -211,53 +272,82 @@ export default function AddGamePage() {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleGameSearch(e) } }}
-                  placeholder="输入游戏名（支持中英文搜索）..."
-                  className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  value={steamQuery}
+                  onChange={(e) => setSteamQuery(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSearch() } }}
+                  placeholder="输入游戏英文名搜索 Steam（如 Elden Ring、Cyberpunk）..."
+                  className="flex-1 px-4 py-2.5 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-white placeholder-white/40 text-sm"
                 />
                 <button
                   type="button"
-                  onClick={handleGameSearch}
-                  disabled={searching || !searchQuery.trim()}
+                  onClick={handleSearch}
+                  disabled={searching || !steamQuery.trim()}
                   className="px-4 py-2.5 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 disabled:opacity-50"
                 >
                   {searching ? '搜索中...' : '搜索'}
                 </button>
               </div>
 
-              {searchResults.length > 0 && (
-                <div className="mt-3 bg-white rounded-lg border border-gray-200 overflow-hidden max-h-64 overflow-y-auto">
-                  {searchResults.map((game) => (
-                    <button
-                      key={game.id}
-                      type="button"
-                      onClick={() => handleGameSelect(game)}
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition-colors text-left border-b border-gray-50 last:border-0"
-                    >
-                      <div className="w-10 h-14 rounded bg-gray-100 flex-shrink-0 overflow-hidden">
-                        {game.cover ? (
-                          <img src={game.cover} alt="" className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-lg">🎮</div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-gray-900 truncate">{game.name}</div>
-                        <div className="text-xs text-gray-400 mt-0.5">{game.nameEn} · {game.size} · {game.category}</div>
-                      </div>
-                      <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                      </svg>
-                    </button>
-                  ))}
+              {steamError && (
+                <div className="mt-2 text-xs text-yellow-400">
+                  Steam 不可用，仅显示本地数据库结果
                 </div>
               )}
 
-              {autoFilling && (
-                <div className="mt-3 text-center text-sm text-blue-600">
-                  正在填充...
+              {/* Steam 结果 */}
+              {steamResults.length > 0 && (
+                <div className="mt-3">
+                  <div className="text-xs text-white/50 mb-2">Steam 搜索结果</div>
+                  <div className="bg-white/5 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                    {steamResults.map(item => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        disabled={filling}
+                        onClick={() => handleSteamSelect(item)}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left border-b border-white/5 last:border-0 disabled:opacity-50"
+                      >
+                        <img src={item.tiny_image} alt="" className="w-8 h-11 rounded object-cover bg-white/10 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm truncate">{item.name}</div>
+                          <div className="text-xs text-white/40">App ID: {item.id}</div>
+                        </div>
+                        <span className="text-xs text-white/30 flex-shrink-0">+ 填充</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 本地数据库结果 */}
+              {localResults.length > 0 && (
+                <div className="mt-3">
+                  <div className="text-xs text-white/50 mb-2">本地数据库</div>
+                  <div className="bg-white/5 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                    {localResults.map(game => (
+                      <button
+                        key={game.id}
+                        type="button"
+                        onClick={() => handleLocalSelect(game)}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left border-b border-white/5 last:border-0"
+                      >
+                        <div className="w-8 h-11 rounded bg-white/10 flex-shrink-0 flex items-center justify-center text-sm">
+                          {game.cover ? <img src={game.cover} alt="" className="w-full h-full object-cover rounded" /> : '🎮'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm truncate">{game.name}</div>
+                          <div className="text-xs text-white/40">{game.nameEn} · {game.size} · {game.category}</div>
+                        </div>
+                        <span className="text-xs text-white/30 flex-shrink-0">+ 填充</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {filling && (
+                <div className="mt-3 text-center text-sm text-white/60">
+                  正在从 Steam 获取详情并下载封面...
                 </div>
               )}
             </div>
