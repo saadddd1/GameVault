@@ -10,7 +10,7 @@ export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
-  const { user, isAdmin, logout } = useAuth()
+  const { user, isAdmin, isLoading, logout } = useAuth()
   const isHomePage = pathname === '/'
 
   const handleSearch = (e: React.FormEvent) => {
@@ -48,7 +48,7 @@ export default function Header() {
             <Link href="/tools" className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${pathname === '/tools' ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'}`}>
               开源工具
             </Link>
-            {isAdmin && (
+            {!isLoading && isAdmin && (
               <Link href="/admin" className="px-4 py-2 text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-all">
                 管理后台
               </Link>
@@ -84,7 +84,9 @@ export default function Header() {
             </form>
 
             {/* 用户区域 */}
-            {user ? (
+            {isLoading ? (
+              <div className="w-10 h-10" />
+            ) : user ? (
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}

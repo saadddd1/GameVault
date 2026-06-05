@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 interface User {
   id: number
@@ -30,16 +30,21 @@ export function getAuthHeaders(): Record<string, string> {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window === 'undefined') return null
-    try {
-      const saved = localStorage.getItem('user')
-      return saved ? JSON.parse(saved) : null
-    } catch {
-      return null
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser))
+      } catch {
+        localStorage.removeItem('user')
+        localStorage.removeItem('token')
+      }
     }
-  })
-  const [isLoading] = useState(false)
+    setIsLoading(false)
+  }, [])
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
