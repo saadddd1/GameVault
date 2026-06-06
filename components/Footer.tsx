@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400">
+    <footer className="bg-[#1C1917] text-stone-400">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo 和简介 */}
@@ -26,22 +26,22 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">快速链接</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-sm hover:text-white transition-colors">
+                <Link href="/" className="text-sm hover:text-stone-200 transition-colors">
                   首页
                 </Link>
               </li>
               <li>
-                <Link href="/games" className="text-sm hover:text-white transition-colors">
+                <Link href="/games" className="text-sm hover:text-stone-200 transition-colors">
                   全部游戏
                 </Link>
               </li>
               <li>
-                <Link href="/games?sort=hot" className="text-sm hover:text-white transition-colors">
+                <Link href="/games?sort=hot" className="text-sm hover:text-stone-200 transition-colors">
                   热门游戏
                 </Link>
               </li>
               <li>
-                <Link href="/tools" className="text-sm hover:text-white transition-colors">
+                <Link href="/tools" className="text-sm hover:text-stone-200 transition-colors">
                   开源工具
                 </Link>
               </li>
@@ -60,21 +60,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-stone-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs">
-            © 2024-2026 GameVault. All rights reserved.
+            © 2026 GameVault. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <Link href="/about" className="text-xs hover:text-white transition-colors">
-              关于我们
-            </Link>
-            <Link href="/privacy" className="text-xs hover:text-white transition-colors">
-              隐私政策
-            </Link>
-            <Link href="/terms" className="text-xs hover:text-white transition-colors">
-              使用条款
-            </Link>
-          </div>
         </div>
       </div>
     </footer>
