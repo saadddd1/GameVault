@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllTools, getToolById, addTool, updateTool, deleteTool } from '@/lib/tool'
+import { getAllMods, getModById, addMod, updateMod, deleteMod } from '@/lib/mod'
 import { requireAdmin } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
@@ -8,15 +8,15 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id')
 
     if (id) {
-      const tool = getToolById(parseInt(id))
-      if (!tool) return NextResponse.json({ error: '工具不存在' }, { status: 404 })
-      return NextResponse.json({ tool })
+      const mod = getModById(parseInt(id))
+      if (!mod) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
+      return NextResponse.json({ mod })
     }
 
-    const data = getAllTools()
-    return NextResponse.json({ tools: data.tools, categories: data.categories, languages: data.languages })
+    const data = getAllMods()
+    return NextResponse.json({ mods: data.mods, games: data.games })
   } catch {
-    return NextResponse.json({ error: '获取工具列表失败' }, { status: 500 })
+    return NextResponse.json({ error: '获取MOD列表失败' }, { status: 500 })
   }
 }
 
@@ -26,10 +26,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const tool = addTool(body)
-    return NextResponse.json({ tool }, { status: 201 })
+    const mod = addMod(body)
+    return NextResponse.json({ mod }, { status: 201 })
   } catch {
-    return NextResponse.json({ error: '添加工具失败' }, { status: 500 })
+    return NextResponse.json({ error: '添加MOD失败' }, { status: 500 })
   }
 }
 
@@ -41,11 +41,11 @@ export async function PUT(request: NextRequest) {
     const { id, ...updates } = await request.json()
     if (!id) return NextResponse.json({ error: '缺少ID' }, { status: 400 })
 
-    const tool = updateTool(id, updates)
-    if (!tool) return NextResponse.json({ error: '工具不存在' }, { status: 404 })
-    return NextResponse.json({ tool })
+    const mod = updateMod(id, updates)
+    if (!mod) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
+    return NextResponse.json({ mod })
   } catch {
-    return NextResponse.json({ error: '更新工具失败' }, { status: 500 })
+    return NextResponse.json({ error: '更新MOD失败' }, { status: 500 })
   }
 }
 
@@ -58,10 +58,10 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get('id')
     if (!id) return NextResponse.json({ error: '缺少ID' }, { status: 400 })
 
-    const ok = deleteTool(parseInt(id))
-    if (!ok) return NextResponse.json({ error: '工具不存在' }, { status: 404 })
+    const ok = deleteMod(parseInt(id))
+    if (!ok) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
     return NextResponse.json({ success: true })
   } catch {
-    return NextResponse.json({ error: '删除工具失败' }, { status: 500 })
+    return NextResponse.json({ error: '删除MOD失败' }, { status: 500 })
   }
 }
