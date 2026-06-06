@@ -1,17 +1,23 @@
 import { NextResponse } from 'next/server'
 import { getAllGames } from '@/lib/games'
 import { getAllUsers } from '@/lib/auth'
+import { getAllMods } from '@/lib/mod'
+import { getAllTools } from '@/lib/tool'
 
 export async function GET() {
   try {
     const { games } = getAllGames()
     const { users } = getAllUsers()
-    
+    const { mods } = getAllMods()
+    const { tools } = getAllTools()
+
     return NextResponse.json({
       totalGames: games.length,
       totalUsers: users.length,
       hotGames: games.filter(g => g.isHot).length,
-      newGames: games.filter(g => g.isNew).length
+      newGames: games.filter(g => g.isNew).length,
+      totalMods: mods.length,
+      totalTools: tools.length
     })
   } catch (error) {
     return NextResponse.json(
