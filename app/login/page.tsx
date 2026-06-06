@@ -123,7 +123,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#1E3A5F] hover:bg-[#162d47] text-white rounded-sm font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[#1E3A5F] hover:bg-[#162d47] text-white rounded-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? '处理中...' : (isLogin ? '登录' : '注册')}
             </button>
@@ -137,7 +137,7 @@ export default function LoginPage() {
                 setIsLogin(!isLogin)
                 setError('')
               }}
-              className="ml-1 text-[#1E3A5F] hover:text-[#1E3A5F] font-medium"
+              className="ml-1 text-[#1E3A5F] hover:text-[#162d47] font-medium"
             >
               {isLogin ? '立即注册' : '立即登录'}
             </button>

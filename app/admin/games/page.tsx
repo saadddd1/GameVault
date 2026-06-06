@@ -3,18 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getAuthHeaders } from '@/components/AuthProvider'
-
-interface Game {
-  id: number
-  title: string
-  category: string
-  size: string
-  downloadCount: number
-  isHot: boolean
-  isNew: boolean
-  isFeatured: boolean
-  updateDate: string
-}
+import type { Game } from '@/lib/games'
 
 export default function GamesManagePage() {
   const [games, setGames] = useState<Game[]>([])

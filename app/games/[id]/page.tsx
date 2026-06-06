@@ -133,7 +133,7 @@ export default function GameDetailPage() {
               
               {/* 游戏元信息 */}
               <div className="flex flex-wrap items-center gap-4 mb-6">
-                <span className="px-3 py-1.5 bg-stone-100 text-white text-sm font-medium rounded-sm">
+                <span className="px-3 py-1.5 bg-stone-100 text-stone-700 text-sm font-medium rounded-sm">
                   {game.category}
                 </span>
                 <span className="text-stone-500">大小：{game.size}</span>
@@ -150,7 +150,7 @@ export default function GameDetailPage() {
                     <p className="text-stone-500 mb-4">登录后即可查看下载链接</p>
                     <Link
                       href="/login"
-                      className="inline-flex px-6 py-3 bg-[#1E3A5F] text-white rounded-sm font-semibold hover:shadow-lg transition-all"
+                      className="inline-flex px-6 py-3 bg-[#1E3A5F] hover:bg-[#162d47] text-white rounded-sm font-semibold transition-colors"
                     >
                       立即登录
                     </Link>
@@ -201,7 +201,7 @@ export default function GameDetailPage() {
               {/* 游戏简介 */}
               <div>
                 <h3 className="text-lg font-semibold text-[#1C1917] mb-3">游戏简介</h3>
-                <div className="prose prose-gray max-w-none">
+                <div className="max-w-none">
                   <p className="text-stone-500 leading-relaxed whitespace-pre-wrap">
                     {game.description}
                   </p>
@@ -221,7 +221,7 @@ export default function GameDetailPage() {
                 <span>分类：</span>
                 <Link 
                   href={`/games?category=${game.category}`}
-                  className="text-[#1E3A5F] hover:text-[#1E3A5F]"
+                  className="text-[#1E3A5F] hover:text-[#162d47]"
                 >
                   {game.category}
                 </Link>

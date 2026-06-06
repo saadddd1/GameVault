@@ -91,11 +91,6 @@ export function validateUser(username: string, password: string): SafeUser | nul
   return null
 }
 
-export function isAdmin(userId: number): boolean {
-  const user = getUserById(userId)
-  return user?.role === 'admin'
-}
-
 let _secret: string | null = null
 
 function getSecret(): string {

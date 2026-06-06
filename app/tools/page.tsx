@@ -80,7 +80,7 @@ export default function ToolsPage() {
               className={`px-4 py-2 text-sm rounded-sm whitespace-nowrap transition-colors ${
                 activeCategory === cat
                   ? 'bg-[#1E3A5F] text-white'
-                  : 'bg-white text-stone-500 hover:bg-gray-100 border border-stone-200'
+                  : 'bg-white text-stone-500 hover:bg-stone-100 border border-stone-200'
               }`}
             >
               {cat}
@@ -115,10 +115,10 @@ export default function ToolsPage() {
               </p>
 
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2 py-0.5 text-xs bg-gray-100 text-stone-500 rounded-sm">
+                <span className="px-2 py-0.5 text-xs bg-stone-100 text-stone-500 rounded-sm">
                   {tool.category}
                 </span>
-                <span className={`px-2 py-0.5 text-xs rounded-sm ${languageColors[tool.language] || 'bg-gray-100 text-stone-500'}`}>
+                <span className={`px-2 py-0.5 text-xs rounded-sm ${languageColors[tool.language] || 'bg-stone-100 text-stone-500'}`}>
                   {tool.language}
                 </span>
                 {tool.tags.slice(0, 2).map(tag => (

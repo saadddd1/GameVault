@@ -13,7 +13,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="text-xl font-bold text-white">GameVault</span>
-                <span className="block text-xs text-gray-500">精品游戏分享平台</span>
+                <span className="block text-xs text-stone-400">游戏 · MOD · 资源</span>
               </div>
             </div>
             <p className="text-sm leading-relaxed max-w-md">

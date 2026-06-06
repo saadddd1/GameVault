@@ -38,33 +38,6 @@ export function getGameById(id: number): Game | undefined {
   return games.find(game => game.id === id)
 }
 
-export function getGamesByCategory(category: string): Game[] {
-  const { games } = getAllGames()
-  return games.filter(game => game.category === category)
-}
-
-export function searchGames(keyword: string): Game[] {
-  const { games } = getAllGames()
-  return games.filter(game =>
-    game.title.toLowerCase().includes(keyword.toLowerCase())
-  )
-}
-
-export function getHotGames(): Game[] {
-  const { games } = getAllGames()
-  return games.filter(game => game.isHot).sort((a, b) => b.downloadCount - a.downloadCount)
-}
-
-export function getNewGames(): Game[] {
-  const { games } = getAllGames()
-  return games.filter(game => game.isNew).sort((a, b) => new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime())
-}
-
-export function getCategories(): string[] {
-  const { categories } = getAllGames()
-  return categories
-}
-
 export function addGame(game: Omit<Game, 'id'>): Game {
   const data = getAllGames()
   const newId = data.games.length > 0 ? Math.max(...data.games.map(g => g.id)) + 1 : 1

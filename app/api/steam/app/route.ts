@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       releaseDate: app.release_date?.date || '',
       genres: (app.genres || []).map((g: { description: string }) => g.description),
       developers: app.developers || [],
-      size: app.pc_requirements?.minimum ? '50GB' : ''
+      size: ''
     })
   } catch {
     return NextResponse.json({ error: 'Steam 不可达' }, { status: 502 })

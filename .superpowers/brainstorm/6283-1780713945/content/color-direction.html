@@ -1,0 +1,137 @@
+<h2>编辑精选风 — 配色方向</h2>
+<p class="subtitle">同样的编辑风布局，不同配色传达完全不同气质。选一个方向。</p>
+
+<div class="options">
+  <div class="option" data-choice="dark-editorial" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>暗色编辑风</h3>
+      <p>深色底（#0f0f0f~#1a1a1a）+ 暖白文字 + 金色点缀。像高端游戏杂志的夜间模式，封面图在暗底上极其突出。专注、沉浸、高级感。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="light-editorial" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>亮色编辑风</h3>
+      <p>奶油白底（#fafaf9）+ 深灰文字 + 藏蓝点缀。传统杂志感，清爽干净，内容层次靠字体大小和留白区分。经典、信赖、耐看。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="mixed-editorial" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>混合编辑风</h3>
+      <p>Hero 区暗色 + 列表区亮色。深色 Hero 突出精选推荐，下面亮色网格承载游戏列表。在视觉冲击和可读性之间取平衡。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+
+    <!-- A: Dark Editorial -->
+    <div class="mockup" style="background:#0f0f0f;padding:10px;border-radius:6px;">
+      <div class="mockup-header" style="color:#a89f91">A: 暗色编辑风</div>
+      <div class="mockup-body" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222;padding-bottom:4px;">
+          <span style="font-family:serif;font-size:11px;font-weight:bold;color:#f5f0e8;letter-spacing:1px;">GAMEVAULT</span>
+          <span style="font-size:8px;color:#666;">首页 游戏 工具 登录</span>
+        </div>
+        <div style="font-family:serif;font-size:12px;font-weight:bold;color:#f5f0e8;letter-spacing:2px;text-transform:uppercase;">精选推荐</div>
+        <div style="background:#1a1a1a;border:1px solid #222;aspect-ratio:21/9;display:flex;align-items:flex-end;padding:8px;">
+          <div>
+            <div style="font-family:serif;font-size:13px;font-weight:bold;color:#f5f0e8;">艾尔登法环</div>
+            <div style="font-size:8px;color:#867e73;">50GB · 动作冒险 · 12,345 次下载</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <span style="background:#c8a84e;color:#0f0f0f;padding:2px 6px;font-size:8px;">下载排行</span>
+          <span style="color:#867e73;padding:2px 6px;font-size:8px;">最新上架</span>
+          <span style="color:#867e73;padding:2px 6px;font-size:8px;">精选</span>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div style="flex:1;background:#1a1a1a;border:1px solid #222;padding:6px;">
+            <div style="background:#222;aspect-ratio:4/3;margin-bottom:3px;"></div>
+            <div style="color:#f5f0e8;font-size:8px;font-weight:bold;">黑神话：悟空</div>
+            <div style="color:#867e73;font-size:7px;">130GB</div>
+          </div>
+          <div style="flex:1;background:#1a1a1a;border:1px solid #222;padding:6px;">
+            <div style="background:#222;aspect-ratio:4/3;margin-bottom:3px;"></div>
+            <div style="color:#f5f0e8;font-size:8px;font-weight:bold;">赛博朋克2077</div>
+            <div style="color:#867e73;font-size:7px;">80GB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: Light Editorial -->
+    <div class="mockup" style="background:#fafaf9;padding:10px;border-radius:6px;">
+      <div class="mockup-header" style="color:#a8a29e">B: 亮色编辑风</div>
+      <div class="mockup-body" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7e5e4;padding-bottom:4px;">
+          <span style="font-family:serif;font-size:11px;font-weight:bold;color:#1c1917;letter-spacing:1px;">GAMEVAULT</span>
+          <span style="font-size:8px;color:#a8a29e;">首页 游戏 工具 登录</span>
+        </div>
+        <div style="font-family:serif;font-size:12px;font-weight:bold;color:#1c1917;letter-spacing:2px;text-transform:uppercase;">精选推荐</div>
+        <div style="background:#f5f5f4;aspect-ratio:21/9;display:flex;align-items:flex-end;padding:8px;">
+          <div>
+            <div style="font-family:serif;font-size:13px;font-weight:bold;color:#1c1917;">艾尔登法环</div>
+            <div style="font-size:8px;color:#78716c;">50GB · 动作冒险 · 12,345 次下载</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <span style="background:#1e3a5f;color:#fff;padding:2px 6px;font-size:8px;">下载排行</span>
+          <span style="color:#78716c;padding:2px 6px;font-size:8px;">最新上架</span>
+          <span style="color:#78716c;padding:2px 6px;font-size:8px;">精选</span>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div style="flex:1;background:#fff;border:1px solid #e7e5e4;padding:6px;">
+            <div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:3px;"></div>
+            <div style="color:#1c1917;font-size:8px;font-weight:bold;">黑神话：悟空</div>
+            <div style="color:#78716c;font-size:7px;">130GB</div>
+          </div>
+          <div style="flex:1;background:#fff;border:1px solid #e7e5e4;padding:6px;">
+            <div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:3px;"></div>
+            <div style="color:#1c1917;font-size:8px;font-weight:bold;">赛博朋克2077</div>
+            <div style="color:#78716c;font-size:7px;">80GB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: Mixed Editorial -->
+    <div class="mockup" style="background:#fafaf9;padding:10px;border-radius:6px;">
+      <div class="mockup-header" style="color:#a8a29e">C: 混合编辑风</div>
+      <div class="mockup-body" style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7e5e4;padding-bottom:4px;">
+          <span style="font-family:serif;font-size:11px;font-weight:bold;color:#1c1917;letter-spacing:1px;">GAMEVAULT</span>
+          <span style="font-size:8px;color:#a8a29e;">首页 游戏 工具 登录</span>
+        </div>
+        <div style="font-family:serif;font-size:12px;font-weight:bold;color:#1c1917;letter-spacing:2px;text-transform:uppercase;">精选推荐</div>
+        <div style="background:#1a1a1a;aspect-ratio:21/9;display:flex;align-items:flex-end;padding:8px;border-radius:4px;">
+          <div>
+            <div style="font-family:serif;font-size:13px;font-weight:bold;color:#f5f0e8;">艾尔登法环</div>
+            <div style="font-size:8px;color:#a89f91;">50GB · 动作冒险 · 12,345 次下载</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <span style="background:#1e3a5f;color:#fff;padding:2px 6px;font-size:8px;">下载排行</span>
+          <span style="color:#78716c;padding:2px 6px;font-size:8px;">最新上架</span>
+          <span style="color:#78716c;padding:2px 6px;font-size:8px;">精选</span>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <div style="flex:1;background:#fff;border:1px solid #e7e5e4;padding:6px;">
+            <div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:3px;"></div>
+            <div style="color:#1c1917;font-size:8px;font-weight:bold;">黑神话：悟空</div>
+            <div style="color:#78716c;font-size:7px;">130GB</div>
+          </div>
+          <div style="flex:1;background:#fff;border:1px solid #e7e5e4;padding:6px;">
+            <div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:3px;"></div>
+            <div style="color:#1c1917;font-size:8px;font-weight:bold;">赛博朋克2077</div>
+            <div style="color:#78716c;font-size:7px;">80GB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

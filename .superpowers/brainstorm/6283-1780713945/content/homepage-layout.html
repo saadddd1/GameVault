@@ -1,0 +1,119 @@
+<h2>首页布局方案</h2>
+<p class="subtitle">编辑风的核心：不对称、留白、内容分层。哪种布局更符合你的内容优先级？</p>
+
+<div class="options">
+  <div class="option" data-choice="hero-grid" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Hero + 网格（接近现状）</h3>
+      <p>顶部大 Hero 精选推荐 → 排序栏 → 游戏网格。结构清晰，用户路径直接。适合"快速找到想玩的游戏"。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="magazine-sections" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>杂志分区式</h3>
+      <p>精选推荐 → "编辑之选"横向滚动 → "热门下载"列表 → "最近上架"网格。每个板块有独立标题和排版节奏。适合"逛一逛、发现新游戏"。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="minimal-feed" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>极简信息流</h3>
+      <p>去 Hero，用大号标题 + 一行简介开场 → 游戏以信息流列表呈现（封面左、信息右，像 RSS Reader）。强调内容和数据，最克制。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+
+    <!-- A: Hero + Grid -->
+    <div class="mockup" style="background:#fafaf9;padding:10px;border-radius:6px;font-size:9px;">
+      <div class="mockup-header" style="color:#a8a29e;font-size:9px;">A: Hero + 网格</div>
+      <div class="mockup-body" style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7e5e4;padding-bottom:3px;">
+          <span style="font-weight:800;color:#1c1917;">GAMEVAULT</span>
+          <span style="color:#a8a29e;font-size:7px;">首页 游戏 工具</span>
+        </div>
+        <div style="background:#f5f5f4;aspect-ratio:3/1;display:flex;align-items:flex-end;padding:6px;border-radius:2px;">
+          <div>
+            <div style="font-weight:800;color:#1c1917;font-size:11px;">⭐ 艾尔登法环</div>
+            <div style="color:#78716c;font-size:7px;">50GB · 动作冒险</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:3px;">
+          <span style="background:#1e3a5f;color:#fff;padding:1px 5px;font-size:7px;">下载排行</span>
+          <span style="color:#a8a29e;font-size:7px;">最新</span>
+          <span style="color:#a8a29e;font-size:7px;">精选</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+          <div style="background:#fff;border:1px solid #e7e5e4;padding:4px;"><div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:2px;"></div><div style="font-weight:700;font-size:7px;">黑神话</div></div>
+          <div style="background:#fff;border:1px solid #e7e5e4;padding:4px;"><div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:2px;"></div><div style="font-weight:700;font-size:7px;">赛博朋克</div></div>
+          <div style="background:#fff;border:1px solid #e7e5e4;padding:4px;"><div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:2px;"></div><div style="font-weight:700;font-size:7px;">只狼</div></div>
+          <div style="background:#fff;border:1px solid #e7e5e4;padding:4px;"><div style="background:#f5f5f4;aspect-ratio:4/3;margin-bottom:2px;"></div><div style="font-weight:700;font-size:7px;">巫师3</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: Magazine Sections -->
+    <div class="mockup" style="background:#fafaf9;padding:10px;border-radius:6px;font-size:9px;">
+      <div class="mockup-header" style="color:#a8a29e;font-size:9px;">B: 杂志分区式</div>
+      <div class="mockup-body" style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7e5e4;padding-bottom:3px;">
+          <span style="font-weight:800;color:#1c1917;">GAMEVAULT</span>
+          <span style="color:#a8a29e;font-size:7px;">首页 游戏 工具</span>
+        </div>
+        <div style="background:#f5f5f4;aspect-ratio:3/1;display:flex;align-items:flex-end;padding:6px;border-radius:2px;">
+          <div><div style="font-weight:800;color:#1c1917;font-size:11px;">⭐ 艾尔登法环</div></div>
+        </div>
+        <div style="font-size:10px;font-weight:700;color:#1c1917;text-transform:uppercase;letter-spacing:1px;border-left:2px solid #1e3a5f;padding-left:4px;">编辑之选</div>
+        <div style="display:flex;gap:3px;overflow:hidden;">
+          <div style="min-width:50px;background:#fff;border:1px solid #e7e5e4;padding:3px;font-size:6px;"><div style="background:#f5f5f4;aspect-ratio:4/3;"></div>黑神话</div>
+          <div style="min-width:50px;background:#fff;border:1px solid #e7e5e4;padding:3px;font-size:6px;"><div style="background:#f5f5f4;aspect-ratio:4/3;"></div>赛博朋克</div>
+          <div style="min-width:50px;background:#fff;border:1px solid #e7e5e4;padding:3px;font-size:6px;"><div style="background:#f5f5f4;aspect-ratio:4/3;"></div>只狼</div>
+          <div style="min-width:50px;background:#fff;border:1px solid #e7e5e4;padding:3px;font-size:6px;"><div style="background:#f5f5f4;aspect-ratio:4/3;"></div>博德3</div>
+        </div>
+        <div style="font-size:10px;font-weight:700;color:#1c1917;text-transform:uppercase;letter-spacing:1px;border-left:2px solid #1e3a5f;padding-left:4px;">热门下载</div>
+        <div style="display:flex;gap:3px;">
+          <div style="flex:1;background:#fff;border:1px solid #e7e5e4;padding:3px;font-size:6px;"><div style="background:#f5f5f4;aspect-ratio:4/3;"></div>艾尔登</div>
+          <div style="flex:1;background:#fff;border:1px solid #e7e5e4;padding:3px;font-size:6px;"><div style="background:#f5f5f4;aspect-ratio:4/3;"></div>黑神话</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: Minimal Feed -->
+    <div class="mockup" style="background:#fafaf9;padding:10px;border-radius:6px;font-size:9px;">
+      <div class="mockup-header" style="color:#a8a29e;font-size:9px;">C: 极简信息流</div>
+      <div class="mockup-body" style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7e5e4;padding-bottom:3px;">
+          <span style="font-weight:800;color:#1c1917;">GAMEVAULT</span>
+          <span style="color:#a8a29e;font-size:7px;">首页 游戏 工具</span>
+        </div>
+        <div style="padding:4px 0;">
+          <div style="font-size:16px;font-weight:800;color:#1c1917;">精品游戏</div>
+          <div style="font-size:9px;color:#78716c;">精心挑选的单机游戏资源，每周更新</div>
+        </div>
+        <div style="display:flex;gap:3px;">
+          <span style="background:#1e3a5f;color:#fff;padding:1px 5px;font-size:7px;">热门</span>
+          <span style="color:#a8a29e;font-size:7px;">最新</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;gap:5px;padding:4px;background:#fff;border:1px solid #e7e5e4;align-items:center;">
+            <div style="width:40px;height:30px;background:#f5f5f4;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="font-weight:700;font-size:8px;">艾尔登法环</div><div style="font-size:7px;color:#78716c;">动作冒险 · 50GB · 12,345 下载</div></div>
+          </div>
+          <div style="display:flex;gap:5px;padding:4px;background:#fff;border:1px solid #e7e5e4;align-items:center;">
+            <div style="width:40px;height:30px;background:#f5f5f4;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="font-weight:700;font-size:8px;">黑神话：悟空</div><div style="font-size:7px;color:#78716c;">动作冒险 · 130GB · 8,888 下载</div></div>
+          </div>
+          <div style="display:flex;gap:5px;padding:4px;background:#fff;border:1px solid #e7e5e4;align-items:center;">
+            <div style="width:40px;height:30px;background:#f5f5f4;flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="font-weight:700;font-size:8px;">赛博朋克2077</div><div style="font-size:7px;color:#78716c;">RPG · 80GB · 6,666 下载</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

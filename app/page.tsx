@@ -137,9 +137,12 @@ export default function HomePage() {
         {/* 当前排序的游戏网格 */}
         <section className="mb-8 lg:mb-10">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-            {(sortBy === 'downloads' ? sortedByDownload : sortBy === 'newest' ? sortedByNewest : sortedByDownload).map(game => (
-              <GameCard key={game.id} game={game} />
-            ))}
+            {(() => {
+              const sorted = sortBy === 'downloads' ? sortedByDownload : sortBy === 'newest' ? sortedByNewest : [...games].sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0))
+              return sorted.map(game => (
+                <GameCard key={game.id} game={game} />
+              ))
+            })()}
           </div>
         </section>
 

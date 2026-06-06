@@ -136,7 +136,7 @@ export default function Header() {
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-stone-200 rounded-sm shadow-lg py-1 z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-stone-200 rounded-sm shadow-sm py-1 z-50">
                     <div className="px-4 py-2 border-b border-stone-100">
                       <p className="text-sm font-medium text-[#1C1917]">{user.username}</p>
                       <p className="text-xs text-stone-400">{user.email}</p>
@@ -245,12 +245,21 @@ export default function Header() {
             </svg>
             游戏
           </Link>
-          <Link href="/login" className={`flex flex-col items-center px-3 py-1 text-[11px] ${pathname === '/login' ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
+          {user ? (
+            <button onClick={() => setShowUserMenu(!showUserMenu)} className={`flex flex-col items-center px-3 py-1 text-[11px] ${showUserMenu ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
+              <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              我的
+            </button>
+          ) : (
+            <Link href="/login" className={`flex flex-col items-center px-3 py-1 text-[11px] ${pathname === '/login' ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
             <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             我的
           </Link>
+          )}
         </div>
       </nav>
     </header>

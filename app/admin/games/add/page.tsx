@@ -196,7 +196,7 @@ export default function AddGamePage() {
       const gameData = {
         title: formData.title,
         description: formData.description,
-        coverImage: formData.coverImage || '/images/default-cover.jpg',
+        coverImage: formData.coverImage || '/images/default.svg',
         size: formData.size,
         category: formData.category,
         downloadLinks,
