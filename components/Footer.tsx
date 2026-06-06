@@ -8,7 +8,7 @@ export default function Footer() {
           {/* Logo 和简介 */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-[#1E3A5F] rounded-sm flex items-center justify-center">
                 <span className="text-white font-bold text-xl">G</span>
               </div>
               <div>
