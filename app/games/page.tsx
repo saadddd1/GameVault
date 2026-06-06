@@ -4,26 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import GameCard from '@/components/GameCard'
-
-interface Game {
-  id: number
-  title: string
-  description: string
-  coverImage: string
-  size: string
-  category: string
-  downloadLinks: {
-    platform: string
-    url: string
-    password: string
-  }[]
-  releaseDate: string
-  updateDate: string
-  downloadCount: number
-  isHot: boolean
-  isNew: boolean
-  isFeatured: boolean
-}
+import type { Game } from '@/lib/games'
 
 function GamesContent() {
   const searchParams = useSearchParams()
@@ -84,33 +65,33 @@ function GamesContent() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E3A5F]"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#FAFAF9' }}>
       {/* 页面头部 */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="bg-white border-b border-stone-200">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-[#1C1917] mb-2">
                 {category ? category : search ? `搜索：${search}` : '全部游戏'}
               </h1>
-              <p className="text-gray-500">
+              <p className="text-stone-500">
                 共找到 {filteredGames.length} 款游戏
               </p>
             </div>
             
             {/* 排序选项 */}
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">排序：</span>
+              <span className="text-sm text-stone-500">排序：</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 bg-white border border-stone-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]"
               >
                 <option value="default">默认排序</option>
                 <option value="hot">最热门</option>
@@ -132,12 +113,12 @@ function GamesContent() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
-            <svg className="w-20 h-20 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-20 h-20 text-stone-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">没有找到游戏</h2>
-            <p className="text-gray-500 mb-6">尝试更换筛选条件或搜索关键词</p>
-            <Link href="/games" className="px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">
+            <h2 className="text-xl font-semibold text-[#1C1917] mb-2">没有找到游戏</h2>
+            <p className="text-stone-500 mb-6">尝试更换筛选条件或搜索关键词</p>
+            <Link href="/games" className="px-6 py-3 bg-[#1E3A5F] text-white rounded-sm hover:bg-[#162d47] transition-colors">
               查看全部游戏
             </Link>
           </div>
@@ -151,7 +132,7 @@ export default function GamesPage() {
   return (
     <Suspense fallback={
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E3A5F]"></div>
       </div>
     }>
       <GamesContent />
