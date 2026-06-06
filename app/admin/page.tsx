@@ -9,6 +9,8 @@ interface Stats {
   totalUsers: number
   hotGames: number
   newGames: number
+  totalMods: number
+  totalTools: number
 }
 
 export default function AdminDashboard() {
@@ -16,7 +18,9 @@ export default function AdminDashboard() {
     totalGames: 0,
     totalUsers: 0,
     hotGames: 0,
-    newGames: 0
+    newGames: 0,
+    totalMods: 0,
+    totalTools: 0
   })
   const [loading, setLoading] = useState(true)
 
@@ -83,6 +87,29 @@ export default function AdminDashboard() {
       ),
       color: 'from-green-500 to-green-600',
       link: '/admin/games?filter=new'
+    },
+    {
+      title: 'MOD总数',
+      value: stats.totalMods || 0,
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+        </svg>
+      ),
+      color: 'from-teal-500 to-teal-600',
+      link: '/admin/mods'
+    },
+    {
+      title: '工具总数',
+      value: stats.totalTools || 0,
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      ),
+      color: 'from-indigo-500 to-indigo-600',
+      link: '/admin/tools'
     }
   ]
 
@@ -162,6 +189,36 @@ export default function AdminDashboard() {
             <div>
               <div className="font-medium text-gray-900">预览网站</div>
               <div className="text-sm text-gray-500">查看前台效果</div>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/mods/add"
+            className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-teal-400 hover:bg-teal-50 transition-all"
+          >
+            <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">添加MOD</div>
+              <div className="text-sm text-gray-500">发布游戏模组或存档</div>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/tools/add"
+            className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-indigo-400 hover:bg-indigo-50 transition-all"
+          >
+            <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+            <div>
+              <div className="font-medium text-gray-900">添加工具</div>
+              <div className="text-sm text-gray-500">收录开源游戏工具</div>
             </div>
           </Link>
         </div>

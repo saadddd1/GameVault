@@ -36,6 +36,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/mods" className="text-sm hover:text-stone-200 transition-colors">
+                  MOD资源
+                </Link>
+              </li>
+              <li>
                 <Link href="/games?sort=hot" className="text-sm hover:text-stone-200 transition-colors">
                   热门游戏
                 </Link>

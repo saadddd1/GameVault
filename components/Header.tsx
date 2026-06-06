@@ -76,6 +76,14 @@ export default function Header() {
               全部游戏
             </Link>
             <Link
+              href="/mods"
+              className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                pathname === '/mods' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
+              }`}
+            >
+              MOD
+            </Link>
+            <Link
               href="/tools"
               className={`px-3 py-1.5 text-sm font-medium transition-colors ${
                 pathname === '/tools' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
@@ -196,6 +204,15 @@ export default function Header() {
               }`}
             >
               全部游戏
+            </Link>
+            <Link
+              href="/mods"
+              onClick={closeMenus}
+              className={`block px-3 py-2 text-sm font-medium rounded-sm ${
+                pathname === '/mods' ? 'text-[#1E3A5F] bg-stone-50' : 'text-stone-600'
+              }`}
+            >
+              MOD
             </Link>
             <Link
               href="/tools"
