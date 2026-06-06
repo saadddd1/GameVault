@@ -172,26 +172,6 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* 热门下载 */}
-        <section className="mb-8 lg:mb-10">
-          <SectionTitle title="热门下载" />
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-            {sortedByDownload.slice(0, 10).map(game => (
-              <GameCard key={game.id} game={game} />
-            ))}
-          </div>
-        </section>
-
-        {/* 最近上架 */}
-        <section className="mb-8 lg:mb-10">
-          <SectionTitle title="最近上架" />
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-            {sortedByNewest.slice(0, 10).map(game => (
-              <GameCard key={game.id} game={game} />
-            ))}
-          </div>
-        </section>
-
         {/* 移动端底部间距（给固定导航让位） */}
         <div className="lg:hidden h-14" />
       </div>

@@ -15,6 +15,9 @@ function GamesContent() {
   const [games, setGames] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<string>(sort || 'default')
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const PAGE_SIZES = [12, 20, 40, 60]
 
   const fetchGames = async () => {
     try {
@@ -62,6 +65,15 @@ function GamesContent() {
       }
     })
 
+  const totalPages = Math.max(1, Math.ceil(filteredGames.length / pageSize))
+  const safePage = Math.min(page, totalPages)
+  const paginatedGames = filteredGames.slice((safePage - 1) * pageSize, safePage * pageSize)
+
+  // Reset page when filter/sort changes
+  useEffect(() => {
+    setPage(1)
+  }, [category, search, sortBy])
+
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -106,11 +118,79 @@ function GamesContent() {
       {/* 游戏列表 */}
       <div className="container mx-auto px-4 py-8">
         {filteredGames.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {filteredGames.map((game) => (
-              <GameCard key={game.id} game={game} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6">
+              {paginatedGames.map((game) => (
+                <GameCard key={game.id} game={game} />
+              ))}
+            </div>
+
+            {/* 分页 */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-1 text-sm text-stone-500 font-number">
+                  <span>共 {filteredGames.length} 款</span>
+                  <span className="text-stone-300">·</span>
+                  <span>第 {safePage}/{totalPages} 页</span>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={safePage <= 1}
+                    className="px-3 py-1.5 text-sm border border-stone-200 rounded-sm hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    上一页
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(n => n === 1 || n === totalPages || Math.abs(n - safePage) <= 1)
+                    .reduce<(number | '...')[]>((acc, n, i, arr) => {
+                      if (i > 0 && n - (arr[i - 1] as number) > 1) acc.push('...')
+                      acc.push(n)
+                      return acc
+                    }, [])
+                    .map((item, i) =>
+                      item === '...' ? (
+                        <span key={`dots-${i}`} className="px-2 text-stone-300 text-sm">...</span>
+                      ) : (
+                        <button
+                          key={item}
+                          onClick={() => setPage(item)}
+                          className={`w-8 h-8 text-sm rounded-sm transition-colors font-number ${
+                            safePage === item
+                              ? 'bg-[#1E3A5F] text-white'
+                              : 'border border-stone-200 hover:bg-stone-100 text-stone-600'
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      )
+                    )}
+                  <button
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    disabled={safePage >= totalPages}
+                    className="px-3 py-1.5 text-sm border border-stone-200 rounded-sm hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    下一页
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-stone-500">
+                  <span>每页</span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1) }}
+                    className="px-2 py-1.5 border border-stone-200 rounded-sm text-sm focus:outline-none focus:ring-1 focus:ring-[#1E3A5F]"
+                  >
+                    {PAGE_SIZES.map(s => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  <span>款</span>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
             <svg className="w-20 h-20 text-stone-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
