@@ -3,22 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import GameCard from '@/components/GameCard'
-
-interface Game {
-  id: number
-  title: string
-  description: string
-  coverImage: string
-  size: string
-  category: string
-  downloadLinks: { platform: string; url: string; password: string }[]
-  releaseDate: string
-  updateDate: string
-  downloadCount: number
-  isHot: boolean
-  isNew: boolean
-  isFeatured: boolean
-}
+import type { Game } from '@/lib/games'
 
 type SortKey = 'downloads' | 'newest' | 'featured'
 
@@ -27,6 +12,14 @@ const sortOptions: { key: SortKey; label: string }[] = [
   { key: 'newest', label: '最新上架' },
   { key: 'featured', label: '精选推荐' },
 ]
+
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <h2 className="text-base lg:text-lg font-bold text-[#1C1917] border-l-[3px] border-[#1E3A5F] pl-3 mb-4 lg:mb-5 tracking-wide">
+      {title}
+    </h2>
+  )
+}
 
 export default function HomePage() {
   const [games, setGames] = useState<Game[]>([])
@@ -52,67 +45,63 @@ export default function HomePage() {
     return () => clearInterval(timer)
   }, [featuredGames.length])
 
-  const sortedGames = [...games].sort((a, b) => {
-    switch (sortBy) {
-      case 'downloads':
-        return b.downloadCount - a.downloadCount
-      case 'newest':
-        return new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime()
-      case 'featured':
-        return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
-      default:
-        return 0
-    }
-  })
+  const sortedByDownload = [...games].sort((a, b) => b.downloadCount - a.downloadCount)
+  const sortedByNewest = [...games].sort((a, b) => new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime())
+  const editorPicks = games.filter(g => g.isFeatured).slice(0, 6)
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FAFAF9' }}>
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#1E3A5F]"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div style={{ backgroundColor: '#FAFAF9' }}>
       <div className="container mx-auto px-4 py-4 lg:py-6 max-w-6xl">
 
-        {/* 精选推荐 Hero */}
+        {/* Hero 精选推荐 */}
         {featuredGames.length > 0 && (
-          <section className="mb-5 lg:mb-6">
+          <section className="mb-6 lg:mb-8">
             <Link href={`/games/${featuredGames[featuredIndex].id}`}>
-              <div className="relative rounded-xl lg:rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 text-white group cursor-pointer">
-                <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-8 p-4 lg:p-8">
-                  <div className="w-16 h-24 lg:w-36 lg:h-48 flex-shrink-0 bg-white/10 rounded-lg overflow-hidden">
+              <div className="relative bg-[#1C1917] overflow-hidden rounded-sm group cursor-pointer">
+                <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 p-5 lg:p-8">
+                  {/* 封面 */}
+                  <div className="w-20 h-28 lg:w-40 lg:h-56 flex-shrink-0 bg-stone-800 overflow-hidden rounded-sm">
                     {featuredGames[featuredIndex].coverImage && featuredGames[featuredIndex].coverImage !== '/images/default.svg' ? (
                       <img src={featuredGames[featuredIndex].coverImage} alt="" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-3xl lg:text-4xl">🎮</div>
                     )}
                   </div>
+                  {/* 文字 */}
                   <div className="flex-1 text-center lg:text-left">
-                    <div className="text-xs text-white/50 mb-1">⭐ 精选推荐</div>
-                    <h2 className="text-base lg:text-2xl font-bold mb-1 lg:mb-2 group-hover:underline">
+                    <div className="text-xs text-stone-400 mb-1 tracking-wider uppercase font-number">Featured</div>
+                    <h2 className="text-lg lg:text-3xl font-bold text-white mb-2 lg:mb-3 group-hover:underline tracking-wide">
                       {featuredGames[featuredIndex].title}
                     </h2>
-                    <p className="text-xs lg:text-sm text-white/60 mb-2 lg:mb-3 line-clamp-2 hidden lg:block">
+                    <p className="text-sm text-stone-400 mb-3 lg:mb-4 line-clamp-2 hidden lg:block leading-relaxed">
                       {featuredGames[featuredIndex].description}
                     </p>
-                    <div className="flex items-center justify-center lg:justify-start gap-2 lg:gap-3 text-xs text-white/50">
-                      <span className="px-2 py-0.5 bg-white/10 rounded">{featuredGames[featuredIndex].size}</span>
-                      <span className="px-2 py-0.5 bg-white/10 rounded">{featuredGames[featuredIndex].category}</span>
+                    <div className="flex items-center justify-center lg:justify-start gap-3 text-xs text-stone-400 font-number">
+                      <span>{featuredGames[featuredIndex].size}</span>
+                      <span className="text-stone-600">·</span>
+                      <span>{featuredGames[featuredIndex].category}</span>
+                      <span className="text-stone-600">·</span>
                       <span>{featuredGames[featuredIndex].downloadCount.toLocaleString()} 次下载</span>
                     </div>
                   </div>
                 </div>
+                {/* 轮播指示器 */}
                 {featuredGames.length > 1 && (
-                  <div className="flex justify-center gap-1.5 pb-2 lg:pb-4">
+                  <div className="flex justify-center gap-1.5 pb-3 lg:pb-5">
                     {featuredGames.map((_, i) => (
                       <button
                         key={i}
                         onClick={(e) => { e.preventDefault(); setFeaturedIndex(i) }}
-                        className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full transition-all ${
-                          i === featuredIndex ? 'bg-white w-4 lg:w-6' : 'bg-white/30'
+                        className={`h-1 rounded-full transition-all ${
+                          i === featuredIndex ? 'bg-white w-6' : 'bg-stone-600 w-1.5'
                         }`}
                       />
                     ))}
@@ -124,62 +113,84 @@ export default function HomePage() {
         )}
 
         {/* 排序栏 */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex gap-1 lg:gap-0 overflow-x-auto pb-1 lg:pb-0">
+        <div className="flex items-center justify-between mb-5 lg:mb-6">
+          <div className="flex gap-1 lg:gap-0">
             {sortOptions.map(opt => (
               <button
                 key={opt.key}
                 onClick={() => setSortBy(opt.key)}
-                className={`px-3 lg:px-4 py-2 text-sm rounded-full lg:rounded-none lg:rounded-t-lg whitespace-nowrap transition-colors ${
+                className={`px-3 lg:px-4 py-1.5 text-sm transition-colors ${
                   sortBy === opt.key
-                    ? 'bg-blue-500 text-white lg:bg-white lg:text-blue-500 lg:border-b-2 lg:border-blue-500 font-medium'
-                    : 'bg-white text-gray-600 hover:text-gray-900 lg:bg-transparent'
+                    ? 'bg-[#1E3A5F] text-white lg:bg-transparent lg:text-[#1E3A5F] lg:border-b-2 lg:border-[#1E3A5F] font-medium'
+                    : 'text-stone-500 hover:text-[#1C1917] lg:hover:text-[#1C1917]'
                 }`}
               >
                 {opt.label}
               </button>
             ))}
           </div>
-          <span className="text-xs lg:text-sm text-gray-500 flex-shrink-0 ml-3">
-            共 {games.length} 款
+          <span className="text-xs text-stone-400 flex-shrink-0 ml-3 font-number">
+            {games.length} 款
           </span>
         </div>
 
-        {/* 游戏网格 */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-          {sortedGames.map(game => (
-            <GameCard key={game.id} game={game} />
-          ))}
-        </div>
-
-        {/* 移动端底部导航 */}
-        <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-gray-200 z-50">
-          <div className="flex justify-around py-2">
-            <Link href="/" className="flex flex-col items-center px-4 py-1 text-xs text-blue-500">
-              <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-              首页
-            </Link>
-            <Link href="/games" className="flex flex-col items-center px-4 py-1 text-xs text-gray-500">
-              <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              游戏
-            </Link>
-            <Link href="/login" className="flex flex-col items-center px-4 py-1 text-xs text-gray-500">
-              <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              我的
-            </Link>
+        {/* 当前排序的游戏网格 */}
+        <section className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+            {(sortBy === 'downloads' ? sortedByDownload : sortBy === 'newest' ? sortedByNewest : sortedByDownload).map(game => (
+              <GameCard key={game.id} game={game} />
+            ))}
           </div>
-        </nav>
+        </section>
 
-        {/* 移动端底部导航占位 */}
-        <div className="lg:hidden h-14"></div>
+        {/* 编辑之选（横向滚动） */}
+        {editorPicks.length > 0 && (
+          <section className="mb-8 lg:mb-10">
+            <SectionTitle title="编辑之选" />
+            <div className="flex gap-3 lg:gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+              {editorPicks.map(game => (
+                <Link key={game.id} href={`/games/${game.id}`} className="flex-shrink-0 w-[140px] lg:w-[200px] group">
+                  <article className="bg-white border border-stone-200 rounded-sm overflow-hidden hover:border-stone-400 transition-colors">
+                    <div className="aspect-[4/3] bg-stone-100 overflow-hidden">
+                      {game.coverImage && game.coverImage !== '/images/default.svg' ? (
+                        <img src={game.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-2xl">🎮</div>
+                      )}
+                    </div>
+                    <div className="p-2 lg:p-3">
+                      <h3 className="font-bold text-[#1C1917] text-xs lg:text-sm line-clamp-1">{game.title}</h3>
+                      <p className="text-[10px] lg:text-xs text-stone-400 mt-0.5 font-number">{game.size}</p>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
+        {/* 热门下载 */}
+        <section className="mb-8 lg:mb-10">
+          <SectionTitle title="热门下载" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+            {sortedByDownload.slice(0, 10).map(game => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </div>
+        </section>
+
+        {/* 最近上架 */}
+        <section className="mb-8 lg:mb-10">
+          <SectionTitle title="最近上架" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+            {sortedByNewest.slice(0, 10).map(game => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </div>
+        </section>
+
+        {/* 移动端底部间距（给固定导航让位） */}
+        <div className="lg:hidden h-14" />
       </div>
     </div>
   )
