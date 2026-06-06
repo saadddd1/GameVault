@@ -1,0 +1,44 @@
+{
+  "mods": [
+    {
+      "id": 1,
+      "title": "艾尔登法环 中文汉化补丁",
+      "description": "完整汉化艾尔登法环全部文本，包括菜单、对话、物品描述和界面提示。基于日语原文翻译，质量上乘。",
+      "coverImage": "/images/default.svg",
+      "category": "模组",
+      "gameName": "艾尔登法环",
+      "author": "汉化组",
+      "version": "v2.1",
+      "fileSize": "256MB",
+      "downloadLinks": [
+        { "platform": "百度网盘", "url": "https://pan.baidu.com", "password": "1234" },
+        { "platform": "夸克网盘", "url": "https://pan.quark.cn", "password": "" }
+      ],
+      "tags": ["汉化", "中文", "翻译"],
+      "installInstructions": "解压后将所有文件复制到游戏根目录 Game/ 文件夹下，覆盖原文件即可。建议先备份原文件。",
+      "downloadCount": 1523,
+      "createdAt": "2026-05-01T00:00:00.000Z",
+      "updatedAt": "2026-06-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "赛博朋克2077 全成就存档",
+      "description": "全主线+支线完成，全成就解锁，满级满技能。适合想直接体验结局或解锁全成就的玩家。",
+      "coverImage": "/images/default.svg",
+      "category": "存档",
+      "gameName": "赛博朋克2077",
+      "author": "玩家小明",
+      "version": "v1.0",
+      "fileSize": "12MB",
+      "downloadLinks": [
+        { "platform": "百度网盘", "url": "https://pan.baidu.com", "password": "cyber" }
+      ],
+      "tags": ["存档", "全成就", "满级"],
+      "installInstructions": "将存档文件放入 %USERPROFILE%/Saved Games/CD Projekt Red/Cyberpunk 2077/ 目录下。",
+      "downloadCount": 892,
+      "createdAt": "2026-04-15T00:00:00.000Z",
+      "updatedAt": "2026-04-15T00:00:00.000Z"
+    }
+  ],
+  "games": ["艾尔登法环", "赛博朋克2077"]
+}
