@@ -13,7 +13,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="text-xl font-bold text-white">GameVault</span>
-                <span className="block text-xs text-stone-400">游戏 · MOD · 资源</span>
+                <span className="block text-xs text-stone-400">游戏 · 安卓 · Windows</span>
               </div>
             </div>
             <p className="text-sm leading-relaxed max-w-md">
@@ -36,8 +36,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/mods" className="text-sm hover:text-stone-200 transition-colors">
-                  MOD资源
+                <Link href="/android" className="text-sm hover:text-stone-200 transition-colors">
+                  安卓软件
                 </Link>
               </li>
               <li>
@@ -46,8 +46,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/tools" className="text-sm hover:text-stone-200 transition-colors">
-                  开源工具
+                <Link href="/windows" className="text-sm hover:text-stone-200 transition-colors">
+                  Windows软件
                 </Link>
               </li>
             </ul>
