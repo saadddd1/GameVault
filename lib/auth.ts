@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import bcrypt from 'bcryptjs'
+import { syncToHF } from './store'
 
 export interface User {
   id: number
@@ -77,6 +78,7 @@ export function createUser(userData: Omit<User, 'id' | 'createdAt' | 'role'> & {
   data.nextId++
 
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
+  syncToHF('users.json')
 
   const { password: _, ...safeUser } = newUser
   return safeUser
@@ -101,6 +103,7 @@ function getSecret(): string {
   } catch {
     _secret = crypto.randomBytes(32).toString('hex')
     fs.writeFileSync(secretPath, _secret)
+    syncToHF('.secret')
   }
   return _secret
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAllGames } from '@/lib/games'
 import { getModById, getAllMods } from '@/lib/mod'
 import { getToolById, getAllTools } from '@/lib/tool'
+import { syncToHF } from '@/lib/store'
 import fs from 'fs'
 import path from 'path'
 
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest) {
       if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
       item.downloadCount++
       fs.writeFileSync(path.join(process.cwd(), 'data/games.json'), JSON.stringify(data, null, 2))
+      syncToHF('games.json')
     } else if (type === 'mod') {
       const data = getAllMods()
       const item = getModById(id)
@@ -38,6 +40,7 @@ export async function GET(request: NextRequest) {
       if (index !== -1) {
         data.mods[index] = item
         fs.writeFileSync(path.join(process.cwd(), 'data/mods.json'), JSON.stringify(data, null, 2))
+        syncToHF('mods.json')
       }
     } else if (type === 'tool') {
       const data = getAllTools()
@@ -50,6 +53,7 @@ export async function GET(request: NextRequest) {
       if (index !== -1) {
         data.tools[index] = item
         fs.writeFileSync(path.join(process.cwd(), 'data/tools.json'), JSON.stringify(data, null, 2))
+        syncToHF('tools.json')
       }
     } else {
       return NextResponse.json({ error: '无效的type参数' }, { status: 400 })

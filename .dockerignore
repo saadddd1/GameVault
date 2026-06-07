@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.github
+.vscode
+.claude
+docs
+*.md
+.eslintrc*
+eslint.config*
+postcss.config*
+tsconfig.json
