@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import { syncToHF } from './store'
 
 export interface Tool {
   id: number
@@ -68,8 +67,7 @@ export function addTool(tool: Omit<Tool, 'id' | 'downloadCount' | 'createdAt' | 
   }
 
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('tools.json')
-  return newTool
+return newTool
 }
 
 export function updateTool(id: number, updates: Partial<Omit<Tool, 'id' | 'createdAt'>>): Tool | null {
@@ -87,8 +85,7 @@ export function updateTool(id: number, updates: Partial<Omit<Tool, 'id' | 'creat
   }
 
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('tools.json')
-  return data.tools[index]
+return data.tools[index]
 }
 
 export function deleteTool(id: number): boolean {
@@ -97,6 +94,5 @@ export function deleteTool(id: number): boolean {
   if (index === -1) return false
   data.tools.splice(index, 1)
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('tools.json')
-  return true
+return true
 }

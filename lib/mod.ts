@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import { syncToHF } from './store'
 
 export interface Mod {
   id: number
@@ -59,7 +58,6 @@ export function addMod(mod: Omit<Mod, 'id' | 'downloadCount' | 'createdAt' | 'up
   }
 
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('mods.json')
   return newMod
 }
 
@@ -75,7 +73,6 @@ export function updateMod(id: number, updates: Partial<Omit<Mod, 'id' | 'created
   }
 
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('mods.json')
   return data.mods[index]
 }
 
@@ -85,6 +82,5 @@ export function deleteMod(id: number): boolean {
   if (index === -1) return false
   data.mods.splice(index, 1)
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('mods.json')
   return true
 }

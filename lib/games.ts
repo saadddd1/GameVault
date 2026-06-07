@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import { syncToHF } from './store'
 
 export interface Game {
   id: number
@@ -45,6 +44,5 @@ export function addGame(game: Omit<Game, 'id'>): Game {
   const newGame: Game = { ...game, id: newId }
   data.games.push(newGame)
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('games.json')
   return newGame
 }

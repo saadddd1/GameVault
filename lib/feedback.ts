@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import { syncToHF } from './store'
 
 export interface Feedback {
   id: number
@@ -34,7 +33,6 @@ export function addFeedback(feedback: Omit<Feedback, 'id' | 'createdAt' | 'resol
   }
   data.feedbacks.push(newFeedback)
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('feedback.json')
   return newFeedback
 }
 
@@ -44,6 +42,5 @@ export function toggleFeedbackResolved(id: number): Feedback | null {
   if (!feedback) return null
   feedback.resolved = !feedback.resolved
   fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  syncToHF('feedback.json')
   return feedback
 }
