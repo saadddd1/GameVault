@@ -3,7 +3,10 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import GameCard from '@/components/GameCard'
+import SoftwareCard from '@/components/SoftwareCard'
 import type { Game } from '@/lib/games'
+import type { AndroidApp } from '@/lib/android'
+import type { WindowsApp } from '@/lib/windows'
 
 type SortKey = 'downloads' | 'newest' | 'featured'
 
@@ -28,13 +31,22 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<SortKey>('downloads')
   const [featuredIndex, setFeaturedIndex] = useState(0)
+  const [androidApps, setAndroidApps] = useState<AndroidApp[]>([])
+  const [windowsApps, setWindowsApps] = useState<WindowsApp[]>([])
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
 
   useEffect(() => {
-    fetch('/api/games')
-      .then(r => r.json())
-      .then(data => { if (data.games) setGames(data.games) })
+    Promise.all([
+      fetch('/api/games').then(r => r.json()),
+      fetch('/api/android').then(r => r.json()),
+      fetch('/api/windows').then(r => r.json()),
+    ])
+      .then(([gameData, androidData, windowsData]) => {
+        if (gameData.games) setGames(gameData.games)
+        if (androidData.apps) setAndroidApps(androidData.apps)
+        if (windowsData.apps) setWindowsApps(windowsData.apps)
+      })
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
@@ -235,6 +247,36 @@ export default function HomePage() {
             </div>
           )}
         </section>
+
+        {/* 安卓软件 */}
+        {androidApps.length > 0 && (
+          <section className="mb-8 lg:mb-10">
+            <div className="flex items-center justify-between mb-4 lg:mb-5">
+              <SectionTitle title="安卓软件" />
+              <Link href="/android" className="text-sm text-[#1E3A5F] hover:underline flex-shrink-0">查看更多 →</Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+              {androidApps.slice(0, 10).map(app => (
+                <SoftwareCard key={app.id} app={app} href={`/android/${app.id}`} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Windows软件 */}
+        {windowsApps.length > 0 && (
+          <section className="mb-8 lg:mb-10">
+            <div className="flex items-center justify-between mb-4 lg:mb-5">
+              <SectionTitle title="Windows软件" />
+              <Link href="/windows" className="text-sm text-[#1E3A5F] hover:underline flex-shrink-0">查看更多 →</Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+              {windowsApps.slice(0, 10).map(app => (
+                <SoftwareCard key={app.id} app={app} href={`/windows/${app.id}`} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* 移动端底部间距 */}
         <div className="lg:hidden h-14" />
