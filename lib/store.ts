@@ -42,7 +42,11 @@ export async function startupDataSync(): Promise<void> {
 
   for (const file of files) {
     try {
-      const res = await fetch(hfUrl(file))
+      const headers: Record<string, string> = {}
+      if (process.env.HF_TOKEN) {
+        headers['Authorization'] = `Bearer ${process.env.HF_TOKEN}`
+      }
+      const res = await fetch(hfUrl(file), { headers })
       if (res.ok) {
         const text = await res.text()
         fs.writeFileSync(path.join(dataDir, file), text)
