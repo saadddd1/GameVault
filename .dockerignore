@@ -8,5 +8,3 @@ docs
 *.md
 .eslintrc*
 eslint.config*
-postcss.config*
-tsconfig.json
