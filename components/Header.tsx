@@ -49,7 +49,7 @@ export default function Header() {
               GAMEVAULT
             </span>
             <span className="hidden sm:block text-[11px] text-stone-400 tracking-wider">
-              游戏 · MOD · 资源
+              游戏 · 安卓 · Windows
             </span>
           </Link>
 
@@ -72,20 +72,20 @@ export default function Header() {
               全部游戏
             </Link>
             <Link
-              href="/mods"
+              href="/android"
               className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                pathname === '/mods' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
+                pathname === '/android' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
               }`}
             >
-              MOD
+              安卓
             </Link>
             <Link
-              href="/tools"
+              href="/windows"
               className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                pathname === '/tools' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
+                pathname === '/windows' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
               }`}
             >
-              MOD工具
+              Windows软件
             </Link>
           </nav>
 
@@ -96,7 +96,7 @@ export default function Header() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="搜索游戏、MOD..."
+                  placeholder="搜索游戏、安卓..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-36 lg:w-56 pl-9 pr-3 py-1.5 bg-stone-50 border border-stone-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#1E3A5F] focus:border-[#1E3A5F] focus:bg-white transition-all text-sm"
@@ -138,28 +138,28 @@ export default function Header() {
               全部游戏
             </Link>
             <Link
-              href="/mods"
+              href="/android"
               onClick={closeMenus}
               className={`block px-3 py-2 text-sm font-medium rounded-sm ${
-                pathname === '/mods' ? 'text-[#1E3A5F] bg-stone-50' : 'text-stone-600'
+                pathname === '/android' ? 'text-[#1E3A5F] bg-stone-50' : 'text-stone-600'
               }`}
             >
-              MOD
+              安卓
             </Link>
             <Link
-              href="/tools"
+              href="/windows"
               onClick={closeMenus}
               className={`block px-3 py-2 text-sm font-medium rounded-sm ${
-                pathname === '/tools' ? 'text-[#1E3A5F] bg-stone-50' : 'text-stone-600'
+                pathname === '/windows' ? 'text-[#1E3A5F] bg-stone-50' : 'text-stone-600'
               }`}
             >
-              MOD工具
+              Windows软件
             </Link>
             {/* 移动端搜索 */}
             <form onSubmit={(e) => { handleSearch(e); closeMenus() }} className="pt-2">
               <input
                 type="text"
-                placeholder="搜索游戏、MOD..."
+                placeholder="搜索游戏、安卓..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#1E3A5F] text-sm"
@@ -185,11 +185,11 @@ export default function Header() {
             </svg>
             游戏
           </Link>
-          <Link href="/mods" className={`flex flex-col items-center px-3 py-1 text-[11px] ${pathname === '/mods' ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
+          <Link href="/android" className={`flex flex-col items-center px-3 py-1 text-[11px] ${pathname === '/android' ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
             <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            MOD
+            安卓
           </Link>
         </div>
       </nav>

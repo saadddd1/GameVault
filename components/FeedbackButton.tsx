@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 interface FeedbackButtonProps {
-  targetType: 'game' | 'mod' | 'tool'
+  targetType: 'game' | 'android' | 'windows'
   targetId: number
   targetName: string
 }
