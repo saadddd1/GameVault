@@ -13,6 +13,8 @@ const sortOptions: { key: SortKey; label: string }[] = [
   { key: 'featured', label: '精选推荐' },
 ]
 
+const PAGE_SIZES = [20, 40, 60]
+
 function SectionTitle({ title }: { title: string }) {
   return (
     <h2 className="text-base lg:text-lg font-bold text-[#1C1917] border-l-[3px] border-[#1E3A5F] pl-3 mb-4 lg:mb-5 tracking-wide">
@@ -26,6 +28,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<SortKey>('downloads')
   const [featuredIndex, setFeaturedIndex] = useState(0)
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
 
   useEffect(() => {
     fetch('/api/games')
@@ -36,7 +40,9 @@ export default function HomePage() {
   }, [])
 
   const featuredGames = games.filter(g => g.isFeatured)
+  const editorPicks = featuredGames.slice(0, 8)
 
+  // Hero carousel
   useEffect(() => {
     if (featuredGames.length <= 1) return
     const timer = setInterval(() => {
@@ -45,9 +51,21 @@ export default function HomePage() {
     return () => clearInterval(timer)
   }, [featuredGames.length])
 
-  const sortedByDownload = [...games].sort((a, b) => b.downloadCount - a.downloadCount)
-  const sortedByNewest = [...games].sort((a, b) => new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime())
-  const editorPicks = games.filter(g => g.isFeatured).slice(0, 6)
+  // Sorted games
+  const sorted = [...games].sort((a, b) => {
+    switch (sortBy) {
+      case 'downloads': return b.downloadCount - a.downloadCount
+      case 'newest': return new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime()
+      case 'featured': return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
+      default: return 0
+    }
+  })
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize))
+  const safePage = Math.min(page, totalPages)
+  const paginated = sorted.slice((safePage - 1) * pageSize, safePage * pageSize)
+
+  useEffect(() => { setPage(1) }, [sortBy])
 
   if (loading) {
     return (
@@ -61,21 +79,19 @@ export default function HomePage() {
     <div style={{ backgroundColor: '#FAFAF9' }}>
       <div className="container mx-auto px-4 py-4 lg:py-6 max-w-6xl">
 
-        {/* Hero 精选推荐 */}
+        {/* Hero 轮播 */}
         {featuredGames.length > 0 && (
           <section className="mb-6 lg:mb-8">
             <Link href={`/games/${featuredGames[featuredIndex].id}`}>
               <div className="relative bg-[#1C1917] overflow-hidden rounded-sm group cursor-pointer">
                 <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 p-5 lg:p-8">
-                  {/* 封面 */}
                   <div className="w-20 h-28 lg:w-40 lg:h-56 flex-shrink-0 bg-stone-800 overflow-hidden rounded-sm">
                     {featuredGames[featuredIndex].coverImage && featuredGames[featuredIndex].coverImage !== '/images/default.svg' ? (
                       <img src={featuredGames[featuredIndex].coverImage} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-3xl lg:text-4xl">🎮</div>
+                      <div className="w-full h-full flex items-center justify-center text-3xl lg:text-4xl">{'\u{1F3AE}'}</div>
                     )}
                   </div>
-                  {/* 文字 */}
                   <div className="flex-1 text-center lg:text-left">
                     <div className="text-xs text-stone-400 mb-1 tracking-wider uppercase font-number">Featured</div>
                     <h2 className="text-lg lg:text-3xl font-bold text-white mb-2 lg:mb-3 group-hover:underline tracking-wide">
@@ -93,7 +109,6 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                {/* 轮播指示器 */}
                 {featuredGames.length > 1 && (
                   <div className="flex justify-center gap-1.5 pb-3 lg:pb-5">
                     {featuredGames.map((_, i) => (
@@ -112,43 +127,9 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* 排序栏 */}
-        <div className="flex items-center justify-between mb-5 lg:mb-6">
-          <div className="flex gap-1 lg:gap-0">
-            {sortOptions.map(opt => (
-              <button
-                key={opt.key}
-                onClick={() => setSortBy(opt.key)}
-                className={`px-3 lg:px-4 py-1.5 text-sm transition-colors ${
-                  sortBy === opt.key
-                    ? 'bg-[#1E3A5F] text-white lg:bg-transparent lg:text-[#1E3A5F] lg:border-b-2 lg:border-[#1E3A5F] font-medium'
-                    : 'text-stone-500 hover:text-[#1C1917] lg:hover:text-[#1C1917]'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-          <span className="text-xs text-stone-400 flex-shrink-0 ml-3 font-number">
-            {games.length} 款
-          </span>
-        </div>
-
-        {/* 当前排序的游戏网格 */}
-        <section className="mb-8 lg:mb-10">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-            {(() => {
-              const sorted = sortBy === 'downloads' ? sortedByDownload : sortBy === 'newest' ? sortedByNewest : [...games].sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0))
-              return sorted.map(game => (
-                <GameCard key={game.id} game={game} />
-              ))
-            })()}
-          </div>
-        </section>
-
-        {/* 编辑之选（横向滚动） */}
+        {/* 编辑之选 */}
         {editorPicks.length > 0 && (
-          <section className="mb-8 lg:mb-10">
+          <section className="mb-6 lg:mb-8">
             <SectionTitle title="编辑之选" />
             <div className="flex gap-3 lg:gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
               {editorPicks.map(game => (
@@ -158,7 +139,7 @@ export default function HomePage() {
                       {game.coverImage && game.coverImage !== '/images/default.svg' ? (
                         <img src={game.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-2xl">🎮</div>
+                        <div className="w-full h-full flex items-center justify-center text-2xl">{'\u{1F3AE}'}</div>
                       )}
                     </div>
                     <div className="p-2 lg:p-3">
@@ -172,7 +153,90 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* 移动端底部间距（给固定导航让位） */}
+        {/* 排序栏 */}
+        <div className="flex items-center justify-between mb-5 lg:mb-6">
+          <div className="flex gap-1 lg:gap-0">
+            {sortOptions.map(opt => (
+              <button
+                key={opt.key}
+                onClick={() => setSortBy(opt.key)}
+                className={`px-3 lg:px-4 py-1.5 text-sm transition-colors ${
+                  sortBy === opt.key
+                    ? 'bg-[#1E3A5F] text-white lg:bg-transparent lg:text-[#1E3A5F] lg:border-b-2 lg:border-[#1E3A5F] font-medium'
+                    : 'text-stone-500 hover:text-[#1C1917]'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <span className="text-xs text-stone-400 flex-shrink-0 ml-3 font-number">
+            共 {sorted.length} 款
+          </span>
+        </div>
+
+        {/* 全部游戏网格 */}
+        <section className="mb-8 lg:mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+            {paginated.map(game => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </div>
+
+          {/* 分页 */}
+          {totalPages > 1 && (
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-1 text-sm text-stone-500 font-number">
+                <span>第 {safePage}/{totalPages} 页</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={safePage <= 1}
+                  className="px-3 py-1.5 text-sm border border-stone-200 rounded-sm hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >上一页</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(n => n === 1 || n === totalPages || Math.abs(n - safePage) <= 1)
+                  .reduce<(number | '...')[]>((acc, n, i, arr) => {
+                    if (i > 0 && n - (arr[i - 1] as number) > 1) acc.push('...')
+                    acc.push(n)
+                    return acc
+                  }, [])
+                  .map((item, i) =>
+                    item === '...' ? (
+                      <span key={`dots-${i}`} className="px-2 text-stone-300 text-sm">...</span>
+                    ) : (
+                      <button
+                        key={item}
+                        onClick={() => setPage(item)}
+                        className={`w-8 h-8 text-sm rounded-sm transition-colors font-number ${
+                          safePage === item ? 'bg-[#1E3A5F] text-white' : 'border border-stone-200 hover:bg-stone-100 text-stone-600'
+                        }`}
+                      >{item}</button>
+                    )
+                  )}
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={safePage >= totalPages}
+                  className="px-3 py-1.5 text-sm border border-stone-200 rounded-sm hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >下一页</button>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-stone-500">
+                <span>每页</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1) }}
+                  className="px-2 py-1.5 border border-stone-200 rounded-sm text-sm focus:outline-none focus:ring-1 focus:ring-[#1E3A5F]"
+                >
+                  {PAGE_SIZES.map(s => (<option key={s} value={s}>{s}</option>))}
+                </select>
+                <span>款</span>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* 移动端底部间距 */}
         <div className="lg:hidden h-14" />
       </div>
     </div>

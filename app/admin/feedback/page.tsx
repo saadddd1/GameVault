@@ -41,7 +41,7 @@ export default function FeedbackManagePage() {
     }
   }
 
-  const typeLabel = (t: string) => t === 'game' ? '游戏' : t === 'android' ? '安卓' : 'Windows'
+  const typeLabel = (t: string) => t === 'game' ? '游戏' : t === 'mod' ? 'MOD' : t === 'android' ? '安卓' : 'Windows'
 
   if (loading) {
     return (
@@ -85,6 +85,7 @@ export default function FeedbackManagePage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                       fb.targetType === 'game' ? 'bg-blue-100 text-blue-700' :
+                      fb.targetType === 'mod' ? 'bg-yellow-100 text-yellow-700' :
                       fb.targetType === 'android' ? 'bg-emerald-100 text-emerald-700' :
                       'bg-purple-100 text-purple-700'
                     }`}>

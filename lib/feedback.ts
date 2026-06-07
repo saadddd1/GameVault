@@ -3,7 +3,7 @@ import path from 'path'
 
 export interface Feedback {
   id: number
-  targetType: 'game' | 'android' | 'windows'
+  targetType: 'game' | 'mod' | 'android' | 'windows'
   targetId: number
   targetName: string
   content: string

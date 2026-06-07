@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getAllGames } from '@/lib/games'
 import { getAndroidById, getAllAndroid } from '@/lib/android'
 import { getWindowsById, getAllWindows } from '@/lib/windows'
+import { getModById, getAllMods } from '@/lib/mod'
 import fs from 'fs'
 import path from 'path'
 
@@ -27,6 +28,15 @@ export async function GET(request: NextRequest) {
       if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
       item.downloadCount++
       fs.writeFileSync(path.join(process.cwd(), 'data/games.json'), JSON.stringify(data, null, 2))
+    } else if (type === 'mod') {
+      const data = getAllMods()
+      const item = data.mods.find(m => m.id === id)
+      if (!item) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
+      link = item.downloadLinks[linkIndex]
+      if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
+      item.downloadCount++
+      const idx = data.mods.findIndex(m => m.id === id)
+      if (idx !== -1) { data.mods[idx] = item; fs.writeFileSync(path.join(process.cwd(), 'data/mods.json'), JSON.stringify(data, null, 2)) }
     } else if (type === 'android') {
       const data = getAllAndroid()
       const item = data.apps.find(a => a.id === id)

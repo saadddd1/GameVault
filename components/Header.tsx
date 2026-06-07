@@ -13,7 +13,7 @@ export default function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      router.push(`/games?search=${encodeURIComponent(searchQuery.trim())}`)
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
     }
   }
 
@@ -49,7 +49,7 @@ export default function Header() {
               GAMEVAULT
             </span>
             <span className="hidden sm:block text-[11px] text-stone-400 tracking-wider">
-              游戏 · 安卓 · Windows
+              游戏 · MOD · 安卓 · Windows
             </span>
           </Link>
 
@@ -70,6 +70,14 @@ export default function Header() {
               }`}
             >
               全部游戏
+            </Link>
+            <Link
+              href="/mods"
+              className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                pathname === '/mods' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
+              }`}
+            >
+              MOD
             </Link>
             <Link
               href="/android"
