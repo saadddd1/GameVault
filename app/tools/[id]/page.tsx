@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useAuth } from '@/components/AuthProvider'
 import type { Tool } from '@/lib/tool'
+import FeedbackButton from '@/components/FeedbackButton'
 
 const languageColors: Record<string, string> = {
   'C++': 'bg-pink-100 text-pink-700',
@@ -22,7 +22,6 @@ function formatStars(n: number): string {
 
 export default function ToolDetailPage() {
   const params = useParams()
-  const { user } = useAuth()
   const [tool, setTool] = useState<Tool | null>(null)
   const [loading, setLoading] = useState(true)
   const [showPasswords, setShowPasswords] = useState<{ [key: number]: boolean }>({})
@@ -190,18 +189,7 @@ export default function ToolDetailPage() {
                 <div className="bg-stone-50 rounded-sm p-5 mb-6">
                   <h3 className="text-lg font-semibold text-[#1C1917] mb-4">下载链接</h3>
 
-                  {!user ? (
-                    <div className="text-center py-4">
-                      <p className="text-stone-500 mb-4">登录后即可查看下载链接</p>
-                      <Link
-                        href="/login"
-                        className="inline-flex px-6 py-3 bg-[#1E3A5F] hover:bg-[#162d47] text-white rounded-sm font-semibold transition-colors"
-                      >
-                        立即登录
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
+                  <div className="space-y-3">
                       {tool.downloadLinks.map((link, index) => (
                         <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-white rounded-sm border border-stone-100">
                           <div className="flex items-center gap-3 flex-1">
@@ -240,7 +228,6 @@ export default function ToolDetailPage() {
                         </div>
                       ))}
                     </div>
-                  )}
                 </div>
               )}
 
@@ -261,8 +248,9 @@ export default function ToolDetailPage() {
                 <span>创建日期：{new Date(tool.createdAt).toLocaleDateString('zh-CN')}</span>
                 <span>更新日期：{new Date(tool.updatedAt).toLocaleDateString('zh-CN')}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <span>作者：{tool.author || '未知'}</span>
+                <FeedbackButton targetType="tool" targetId={tool.id} targetName={tool.name} />
               </div>
             </div>
           </div>

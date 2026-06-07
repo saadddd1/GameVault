@@ -12,7 +12,6 @@ interface User {
 interface AuthContextType {
   user: User | null
   login: (username: string, password: string) => Promise<boolean>
-  register: (username: string, email: string, password: string) => Promise<boolean>
   logout: () => void
   isAdmin: boolean
   isLoading: boolean
@@ -68,28 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'register', username, email, password })
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        setUser(data.user)
-        localStorage.setItem('user', JSON.stringify(data.user))
-        localStorage.setItem('token', data.token)
-        return true
-      }
-      return false
-    } catch {
-      return false
-    }
-  }
-
   const logout = () => {
     setUser(null)
     localStorage.removeItem('user')
@@ -102,7 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={{
       user,
       login,
-      register,
       logout,
       isAdmin: user?.role === 'admin',
       isLoading,

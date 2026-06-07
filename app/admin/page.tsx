@@ -6,7 +6,6 @@ import { getAuthHeaders } from '@/components/AuthProvider'
 
 interface Stats {
   totalGames: number
-  totalUsers: number
   hotGames: number
   newGames: number
   totalMods: number
@@ -16,7 +15,6 @@ interface Stats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({
     totalGames: 0,
-    totalUsers: 0,
     hotGames: 0,
     newGames: 0,
     totalMods: 0,
@@ -53,17 +51,6 @@ export default function AdminDashboard() {
       ),
       color: 'from-blue-500 to-blue-600',
       link: '/admin/games'
-    },
-    {
-      title: '注册用户',
-      value: stats.totalUsers,
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-      color: 'from-purple-500 to-purple-600',
-      link: '/admin/users'
     },
     {
       title: '热门游戏',

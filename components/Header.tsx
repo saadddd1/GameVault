@@ -3,15 +3,12 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { useAuth } from './AuthProvider'
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [showUserMenu, setShowUserMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
-  const { user, isAdmin, isLoading, logout } = useAuth()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,7 +19,6 @@ export default function Header() {
 
   const closeMenus = () => {
     setShowMobileMenu(false)
-    setShowUserMenu(false)
   }
 
   return (
@@ -91,14 +87,6 @@ export default function Header() {
             >
               MOD工具
             </Link>
-            {!isLoading && isAdmin && (
-              <Link
-                href="/admin"
-                className="px-3 py-1.5 text-sm font-medium text-stone-500 hover:text-[#1C1917] transition-colors"
-              >
-                管理后台
-              </Link>
-            )}
           </nav>
 
           {/* 右侧区域 */}
@@ -123,62 +111,6 @@ export default function Header() {
                 </svg>
               </div>
             </form>
-
-            {/* 用户区域 */}
-            {isLoading ? (
-              <div className="w-8 h-8" />
-            ) : user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-2 px-2 py-1.5 hover:bg-stone-50 transition-colors rounded-sm"
-                >
-                  <div className="w-7 h-7 bg-[#1E3A5F] rounded-sm flex items-center justify-center">
-                    <span className="text-white text-xs font-semibold font-number">
-                      {user.username.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <span className="hidden lg:block text-sm font-medium text-[#1C1917]">
-                    {user.username}
-                  </span>
-                </button>
-
-                {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-stone-200 rounded-sm shadow-sm py-1 z-50">
-                    <div className="px-4 py-2 border-b border-stone-100">
-                      <p className="text-sm font-medium text-[#1C1917]">{user.username}</p>
-                      <p className="text-xs text-stone-400">{user.email}</p>
-                    </div>
-                    {isAdmin && (
-                      <Link
-                        href="/admin"
-                        className="block px-4 py-2 text-sm text-[#1E3A5F] hover:bg-stone-50 transition-colors"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        管理后台
-                      </Link>
-                    )}
-                    <button
-                      onClick={() => {
-                        logout()
-                        setShowUserMenu(false)
-                        router.push('/')
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      退出登录
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                href="/login"
-                className="px-3 py-1.5 bg-[#1E3A5F] text-white text-sm font-medium rounded-sm hover:bg-[#162d47] transition-colors"
-              >
-                登录
-              </Link>
-            )}
           </div>
         </div>
       </div>
@@ -223,15 +155,6 @@ export default function Header() {
             >
               MOD工具
             </Link>
-            {!isLoading && isAdmin && (
-              <Link
-                href="/admin"
-                onClick={closeMenus}
-                className="block px-3 py-2 text-sm font-medium text-[#1E3A5F]"
-              >
-                管理后台
-              </Link>
-            )}
             {/* 移动端搜索 */}
             <form onSubmit={(e) => { handleSearch(e); closeMenus() }} className="pt-2">
               <input
@@ -262,21 +185,12 @@ export default function Header() {
             </svg>
             游戏
           </Link>
-          {user ? (
-            <button onClick={() => setShowUserMenu(!showUserMenu)} className={`flex flex-col items-center px-3 py-1 text-[11px] ${showUserMenu ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
-              <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              我的
-            </button>
-          ) : (
-            <Link href="/login" className={`flex flex-col items-center px-3 py-1 text-[11px] ${pathname === '/login' ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
+          <Link href="/mods" className={`flex flex-col items-center px-3 py-1 text-[11px] ${pathname === '/mods' ? 'text-[#1E3A5F]' : 'text-stone-400'}`}>
             <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            我的
+            MOD
           </Link>
-          )}
         </div>
       </nav>
     </header>

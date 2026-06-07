@@ -3,12 +3,11 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useAuth } from '@/components/AuthProvider'
 import type { Game } from '@/lib/games'
+import FeedbackButton from '@/components/FeedbackButton'
 
 export default function GameDetailPage() {
   const params = useParams()
-  const { user } = useAuth()
   const [game, setGame] = useState<Game | null>(null)
   const [loading, setLoading] = useState(true)
   const [showPasswords, setShowPasswords] = useState<{ [key: number]: boolean }>({})
@@ -145,18 +144,7 @@ export default function GameDetailPage() {
               <div className="bg-stone-50 rounded-sm p-5 mb-6">
                 <h3 className="text-lg font-semibold text-[#1C1917] mb-4">下载链接</h3>
                 
-                {!user ? (
-                  <div className="text-center py-4">
-                    <p className="text-stone-500 mb-4">登录后即可查看下载链接</p>
-                    <Link
-                      href="/login"
-                      className="inline-flex px-6 py-3 bg-[#1E3A5F] hover:bg-[#162d47] text-white rounded-sm font-semibold transition-colors"
-                    >
-                      立即登录
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
+                <div className="space-y-3">
                     {game.downloadLinks.map((link, index) => (
                       <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 bg-white rounded-sm border border-stone-100">
                         <div className="flex items-center gap-3 flex-1">
@@ -173,7 +161,7 @@ export default function GameDetailPage() {
                                 {showPasswords[index] ? (
                                   <span className="font-mono text-[#1C1917] ml-1">{link.password}</span>
                                 ) : (
-                                  <button 
+                                  <button
                                     onClick={() => togglePassword(index)}
                                     className="text-[#1E3A5F] hover:text-[#1E3A5F] ml-1"
                                   >
@@ -195,7 +183,6 @@ export default function GameDetailPage() {
                       </div>
                     ))}
                   </div>
-                )}
               </div>
 
               {/* 游戏简介 */}
@@ -217,14 +204,15 @@ export default function GameDetailPage() {
                 <span>发布日期：{new Date(game.releaseDate).toLocaleDateString('zh-CN')}</span>
                 <span>更新日期：{new Date(game.updateDate).toLocaleDateString('zh-CN')}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 <span>分类：</span>
-                <Link 
+                <Link
                   href={`/games?category=${game.category}`}
                   className="text-[#1E3A5F] hover:text-[#162d47]"
                 >
                   {game.category}
                 </Link>
+                <FeedbackButton targetType="game" targetId={game.id} targetName={game.title} />
               </div>
             </div>
           </div>
