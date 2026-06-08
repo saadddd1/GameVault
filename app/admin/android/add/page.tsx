@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { getAuthHeaders } from '@/components/AuthProvider'
+import FormInput from '@/components/admin/FormInput'
+import FormSelect from '@/components/admin/FormSelect'
+import FormTextarea from '@/components/admin/FormTextarea'
+import DownloadLinksEditor from '@/components/admin/DownloadLinksEditor'
+
+const PLATFORMS = ['蓝奏云', '百度网盘', '阿里云盘', '夸克网盘', 'GitHub', '其他']
 
 export default function AddAndroidPage() {
   const router = useRouter()
@@ -13,21 +19,17 @@ export default function AddAndroidPage() {
 
   const [formData, setFormData] = useState({
     name: '', description: '', coverImage: '', category: '', version: '', fileSize: '',
-    platform1: '蓝奏云', url1: '', password1: '',
-    platform2: '百度网盘', url2: '', password2: '',
     tags: '', author: ''
   })
+  const [downloadLinks, setDownloadLinks] = useState<{ platform: string; url: string; password: string }[]>([
+    { platform: '蓝奏云', url: '', password: '' }
+  ])
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/android')
-      const data = await response.json()
-      if (data.categories) setCategories(data.categories)
-    } catch { /* */ }
-  }
-
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetchCategories() }, [])
+  useEffect(() => {
+    fetch('/api/android').then(r => r.json()).then(d => {
+      if (d.categories) setCategories(d.categories)
+    }).catch(() => {})
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
@@ -35,14 +37,10 @@ export default function AddAndroidPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setSuccess('')
-    setLoading(true)
+    setError(''); setSuccess(''); setLoading(true)
 
-    const downloadLinks = []
-    if (formData.url1) downloadLinks.push({ platform: formData.platform1, url: formData.url1, password: formData.password1 })
-    if (formData.url2) downloadLinks.push({ platform: formData.platform2, url: formData.url2, password: formData.password2 })
-    if (downloadLinks.length === 0) { setError('请至少填写一个下载链接'); setLoading(false); return }
+    const validLinks = downloadLinks.filter(l => l.url)
+    if (validLinks.length === 0) { setError('请至少填写一个下载链接'); setLoading(false); return }
 
     const tags = formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : []
 
@@ -53,7 +51,7 @@ export default function AddAndroidPage() {
           name: formData.name, description: formData.description,
           coverImage: formData.coverImage || '/images/default.svg',
           category: formData.category, version: formData.version,
-          fileSize: formData.fileSize, downloadLinks, tags, author: formData.author
+          fileSize: formData.fileSize, downloadLinks: validLinks, tags, author: formData.author
         })
       })
       if (response.ok) {
@@ -63,11 +61,7 @@ export default function AddAndroidPage() {
         const data = await response.json()
         setError(data.error || '添加失败')
       }
-    } catch {
-      setError('网络错误')
-    } finally {
-      setLoading(false)
-    }
+    } catch { setError('网络错误') } finally { setLoading(false) }
   }
 
   return (
@@ -78,70 +72,21 @@ export default function AddAndroidPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">应用名称 <span className="text-red-500">*</span></label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">分类 <span className="text-red-500">*</span></label>
-            <select name="category" value={formData.category} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-              <option value="">请选择分类</option>
-              {categories.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">版本</label>
-            <input type="text" name="version" value={formData.version} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">文件大小</label>
-            <input type="text" name="fileSize" value={formData.fileSize} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="例如：18.5 MB" />
-          </div>
+          <FormInput label="应用名称" name="name" value={formData.name} onChange={handleChange} required />
+          <FormSelect label="分类" name="category" value={formData.category} onChange={handleChange} options={categories} required />
+          <FormInput label="版本" name="version" value={formData.version} onChange={handleChange} />
+          <FormInput label="文件大小" name="fileSize" value={formData.fileSize} onChange={handleChange} placeholder="例如：18.5 MB" />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">封面图片链接</label>
-          <input type="text" name="coverImage" value={formData.coverImage} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="留空使用默认封面" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">应用简介 <span className="text-red-500">*</span></label>
-          <textarea name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">标签</label>
-          <input type="text" name="tags" value={formData.tags} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="多个标签用逗号分隔，例如：去广告,开源" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">作者</label>
-          <input type="text" name="author" value={formData.author} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <FormInput label="封面图片链接" name="coverImage" value={formData.coverImage} onChange={handleChange} placeholder="留空使用默认封面" />
+        <FormTextarea label="应用简介" name="description" value={formData.description} onChange={handleChange} required />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormInput label="标签" name="tags" value={formData.tags} onChange={handleChange} placeholder="多个标签用逗号分隔，例如：去广告,开源" />
+          <FormInput label="作者" name="author" value={formData.author} onChange={handleChange} />
         </div>
 
-        {/* 下载链接 */}
-        {[1, 2].map(n => (
-          <div key={n} className="border-t pt-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">下载链接 {n}{n === 1 ? '' : '（可选）'}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">平台</label>
-                <select name={`platform${n}`} value={(formData as any)[`platform${n}`]} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="蓝奏云">蓝奏云</option>
-                  <option value="百度网盘">百度网盘</option>
-                  <option value="阿里云盘">阿里云盘</option>
-                  <option value="夸克网盘">夸克网盘</option>
-                  <option value="GitHub">GitHub</option>
-                  <option value="其他">其他</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">链接地址</label>
-                <input type="text" name={`url${n}`} value={(formData as any)[`url${n}`]} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="下载链接" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">提取码</label>
-                <input type="text" name={`password${n}`} value={(formData as any)[`password${n}`]} onChange={handleChange} className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="可选" />
-              </div>
-            </div>
-          </div>
-        ))}
+        <div className="border-t pt-6">
+          <DownloadLinksEditor links={downloadLinks} onChange={setDownloadLinks} platforms={PLATFORMS} />
+        </div>
 
         <div className="border-t pt-6 flex justify-end gap-4">
           <button type="button" onClick={() => router.back()} className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">取消</button>
@@ -153,3 +98,4 @@ export default function AddAndroidPage() {
     </div>
   )
 }
+

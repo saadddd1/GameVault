@@ -1,12 +1,11 @@
-import Link from 'next/link'
+import Link from "next/link"
 
 export default function Footer() {
   return (
     <footer className="bg-[#1C1917] text-stone-400">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo 和简介 */}
-          <div className="md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-[#1E3A5F] rounded-sm flex items-center justify-center">
                 <span className="text-white font-bold text-xl">G</span>
@@ -21,39 +20,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* 快速链接 */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">快速链接</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-sm hover:text-stone-200 transition-colors">
-                  首页
-                </Link>
-              </li>
-              <li>
-                <Link href="/games" className="text-sm hover:text-stone-200 transition-colors">
-                  全部游戏
-                </Link>
-              </li>
-              <li>
-                <Link href="/android" className="text-sm hover:text-stone-200 transition-colors">
-                  安卓软件
-                </Link>
-              </li>
-              <li>
-                <Link href="/games?sort=hot" className="text-sm hover:text-stone-200 transition-colors">
-                  热门游戏
-                </Link>
-              </li>
-              <li>
-                <Link href="/windows" className="text-sm hover:text-stone-200 transition-colors">
-                  Windows软件
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* 免责声明 */}
           <div>
             <h3 className="text-white font-semibold mb-4">免责声明</h3>
             <p className="text-xs leading-relaxed">
@@ -65,7 +31,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-stone-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-stone-800 mt-8 pt-8 text-center">
           <p className="text-xs">
             © 2026 GameVault. All rights reserved.
           </p>

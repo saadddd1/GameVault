@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
       downloadCount: body.downloadCount || 0,
       isHot: body.isHot || false,
       isNew: body.isNew !== undefined ? body.isNew : true,
-      isFeatured: body.isFeatured !== undefined ? body.isFeatured : false
+      isFeatured: body.isFeatured !== undefined ? body.isFeatured : false,
+      screenshots: body.screenshots || []
     })
 
     return NextResponse.json({ success: true, game: newGame }, { status: 201 })

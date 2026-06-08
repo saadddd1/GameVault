@@ -12,14 +12,14 @@
 }
 
 body {
-  font-family: 'Noto Sans SC', sans-serif;
+  font-family: var(--font-noto-sans-sc), 'Noto Sans SC', sans-serif;
   background-color: var(--page-bg);
   color: var(--body);
 }
 
 /* 数字/标签使用 Inter */
 .font-number {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter), 'Inter', sans-serif;
 }
 
 /* 滚动条 */
@@ -56,3 +56,4 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
