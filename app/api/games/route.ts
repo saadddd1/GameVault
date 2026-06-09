@@ -1,142 +1,77 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { addGame, getAllGames } from '@/lib/games'
+import { NextRequest } from 'next/server'
+import { getAllGames, getGameById, addGame, updateGame, deleteGame } from '@/lib/games'
 import { requireAdmin } from '@/lib/auth'
-import fs from 'fs'
-import path from 'path'
+import { json, err, notFound, unauthorized } from '@/lib/api-helpers'
 
-const dataPath = path.join(process.cwd(), 'data/games.json')
+function guard(req: NextRequest) {
+  return requireAdmin(req) ? null : unauthorized()
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    if (id) {
+      const game = getGameById(parseInt(id))
+      if (!game) return notFound('游戏不存在')
+      return json({ game })
+    }
+    return json(getAllGames())
+  } catch {
+    return err('获取列表失败')
+  }
+}
 
 export async function POST(request: NextRequest) {
-  if (!requireAdmin(request)) {
-    return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
-  }
-
+  const blocked = guard(request); if (blocked) return blocked
   try {
     const body = await request.json()
+    if (!body.title || !body.description || !body.size || !body.category) return err('缺少必填字段', 400)
+    if (!body.downloadLinks?.length) return err('至少需要一个下载链接', 400)
 
-    if (!body.title || !body.description || !body.size || !body.category) {
-      return NextResponse.json(
-        { error: '缺少必填字段' },
-        { status: 400 }
-      )
-    }
-
-    if (!body.downloadLinks || body.downloadLinks.length === 0) {
-      return NextResponse.json(
-        { error: '至少需要一个下载链接' },
-        { status: 400 }
-      )
-    }
-
-    const newGame = addGame({
+    const game = addGame({
       title: body.title,
       description: body.description,
       coverImage: body.coverImage || '/images/default.svg',
       size: body.size,
       category: body.category,
       downloadLinks: body.downloadLinks,
+      screenshots: body.screenshots || [],
       releaseDate: body.releaseDate || new Date().toISOString().split('T')[0],
       updateDate: body.updateDate || new Date().toISOString().split('T')[0],
       downloadCount: body.downloadCount || 0,
       isHot: body.isHot || false,
       isNew: body.isNew !== undefined ? body.isNew : true,
       isFeatured: body.isFeatured !== undefined ? body.isFeatured : false,
-      screenshots: body.screenshots || []
     })
-
-    return NextResponse.json({ success: true, game: newGame }, { status: 201 })
-  } catch (error) {
-    console.error('添加游戏失败:', error)
-    return NextResponse.json(
-      { error: '添加游戏失败' },
-      { status: 500 }
-    )
-  }
-}
-
-export async function GET() {
-  try {
-    const data = getAllGames()
-    return NextResponse.json(data)
-  } catch (error) {
-    console.error('获取游戏失败:', error)
-    return NextResponse.json(
-      { error: '获取游戏失败' },
-      { status: 500 }
-    )
+    return json({ success: true, game }, 201)
+  } catch {
+    return err('添加失败')
   }
 }
 
 export async function PUT(request: NextRequest) {
-  if (!requireAdmin(request)) {
-    return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
-  }
-
+  const blocked = guard(request); if (blocked) return blocked
   try {
-    const body = await request.json()
-    const { id, ...updates } = body
-
-    if (!id) {
-      return NextResponse.json({ error: '缺少游戏ID' }, { status: 400 })
-    }
-
-    const data = getAllGames()
-    const gameIndex = data.games.findIndex(g => g.id === id)
-
-    if (gameIndex === -1) {
-      return NextResponse.json({ error: '游戏不存在' }, { status: 404 })
-    }
-
-    data.games[gameIndex] = {
-      ...data.games[gameIndex],
-      ...updates,
-      id
-    }
-
-    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-
-    return NextResponse.json({ success: true, game: data.games[gameIndex] })
-  } catch (error) {
-    console.error('更新游戏失败:', error)
-    return NextResponse.json({ error: '更新游戏失败' }, { status: 500 })
+    const { id, ...updates } = await request.json()
+    if (!id) return err('缺少ID', 400)
+    const game = updateGame(id, updates)
+    if (!game) return notFound('游戏不存在')
+    return json({ success: true, game })
+  } catch {
+    return err('更新失败')
   }
 }
 
 export async function DELETE(request: NextRequest) {
-  if (!requireAdmin(request)) {
-    return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
-  }
-
+  const blocked = guard(request); if (blocked) return blocked
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
-
-    if (!id) {
-      return NextResponse.json(
-        { error: '缺少游戏ID' },
-        { status: 400 }
-      )
-    }
-
-    const data = getAllGames()
-    const gameIndex = data.games.findIndex(g => g.id === parseInt(id))
-
-    if (gameIndex === -1) {
-      return NextResponse.json(
-        { error: '游戏不存在' },
-        { status: 404 }
-      )
-    }
-
-    data.games.splice(gameIndex, 1)
-    fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-
-    return NextResponse.json({ success: true, message: '删除成功' })
-  } catch (error) {
-    console.error('删除游戏失败:', error)
-    return NextResponse.json(
-      { error: '删除游戏失败' },
-      { status: 500 }
-    )
+    if (!id) return err('缺少ID', 400)
+    if (!deleteGame(parseInt(id))) return notFound('游戏不存在')
+    return json({ success: true })
+  } catch {
+    return err('删除失败')
   }
 }

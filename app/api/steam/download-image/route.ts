@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/auth'
+import { generateThumbnail } from '@/lib/image'
 import fs from 'fs'
 import path from 'path'
 
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(await res.arrayBuffer())
 
-    const ext = path.extname(new URL(url).pathname) || '.jpg'
+    const ext = '.jpg'
     const name = (filename || `steam_${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g, '_')
     const finalName = `${name}${ext}`
 
@@ -29,9 +30,16 @@ export async function POST(request: NextRequest) {
     const filePath = path.join(dir, finalName)
     fs.writeFileSync(filePath, buffer)
 
+    // 生成缩略图（后台异步，失败不影响主流程）
+    let thumbPath = `/images/${finalName}`
+    try {
+      thumbPath = await generateThumbnail(filePath)
+    } catch { /* 缩略图生成失败，用原图 */ }
+
     return NextResponse.json({
       success: true,
-      path: `/images/${finalName}`
+      path: `/images/${finalName}`,
+      thumb: thumbPath,
     })
   } catch {
     return NextResponse.json({ error: '下载图片失败' }, { status: 500 })

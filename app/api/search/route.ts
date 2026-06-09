@@ -1,47 +1,53 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { getAllGames } from '@/lib/games'
 import { getAllMods } from '@/lib/mod'
 import { getAllAndroid } from '@/lib/android'
 import { getAllWindows } from '@/lib/windows'
 import { trackSearch, getHotSearches } from '@/lib/search'
+import { SEARCHABLE_MODULES } from '@/lib/modules'
+import { json, err } from '@/lib/api-helpers'
+
+// 各模块的数据获取 + 搜索字段映射
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SearchItem = Record<string, any>
+
+function getSearchData() {
+  return [
+    { key: 'games' as const,   items: getAllGames().games as unknown as SearchItem[],   fields: ['title', 'description', 'category'] },
+    { key: 'mods' as const,    items: getAllMods().mods as unknown as SearchItem[],       fields: ['title', 'description', 'gameName', 'category'] },
+    { key: 'android' as const, items: getAllAndroid().apps as unknown as SearchItem[],   fields: ['name', 'description', 'category'] },
+    { key: 'windows' as const, items: getAllWindows().apps as unknown as SearchItem[],   fields: ['name', 'description', 'category'] },
+  ]
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const q = searchParams.get('q')?.trim()
   const hot = searchParams.get('hot')
 
-  // 热门搜索
   if (hot === '1') {
-    return NextResponse.json({ hot: getHotSearches(10) })
+    return json({ hot: getHotSearches(10) })
   }
 
-  // 搜索
   if (!q || q.length < 2) {
-    return NextResponse.json({ results: { games: [], mods: [], android: [], windows: [] }, hot: getHotSearches(10) })
+    return json({ results: { games: [], mods: [], android: [], windows: [] }, hot: getHotSearches(10) })
   }
 
   trackSearch(q)
   const query = q.toLowerCase()
 
   try {
-    const { games } = getAllGames()
-    const { mods } = getAllMods()
-    const { apps: androidApps } = getAllAndroid()
-    const { apps: windowsApps } = getAllWindows()
+    const results: Record<string, unknown[]> = {}
+    const match = (text: unknown) => typeof text === 'string' && text.toLowerCase().includes(query)
 
-    const match = (text: string) => text.toLowerCase().includes(query)
+    for (const { key, items, fields } of getSearchData()) {
+      results[key] = items.filter(item =>
+        fields.some(f => match(item[f]))
+      )
+    }
 
-    return NextResponse.json({
-      query: q,
-      results: {
-        games: games.filter(g => match(g.title) || match(g.description) || match(g.category)),
-        mods: mods.filter(m => match(m.title) || match(m.description) || match(m.gameName) || match(m.category)),
-        android: androidApps.filter(a => match(a.name) || match(a.description) || match(a.category)),
-        windows: windowsApps.filter(a => match(a.name) || match(a.description) || match(a.category))
-      },
-      hot: getHotSearches(10)
-    })
+    return json({ query: q, results, hot: getHotSearches(10) })
   } catch {
-    return NextResponse.json({ error: '搜索失败' }, { status: 500 })
+    return err('搜索失败')
   }
 }

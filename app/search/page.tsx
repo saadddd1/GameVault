@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { getThumbPath } from '@/lib/image-paths'
 
 interface SearchResult {
   games: any[]
@@ -133,7 +134,7 @@ function SearchContent() {
                       <Link key={`g-${item.id}`} href={`/games/${item.id}`} className="block bg-white border border-stone-200 rounded-sm p-4 hover:border-stone-400 transition-colors">
                         <div className="flex gap-3">
                           <div className="w-12 h-16 bg-stone-100 rounded-sm flex-shrink-0 overflow-hidden">
-                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={item.coverImage} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'\u{1F3AE}'}</div>}
+                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={getThumbPath(item.coverImage)} alt="" width={48} height={64} loading="lazy" decoding="async" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'\u{1F3AE}'}</div>}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-[#1C1917] text-sm">{item.title}</h4>
@@ -156,7 +157,7 @@ function SearchContent() {
                       <Link key={`m-${item.id}`} href={`/mods/${item.id}`} className="block bg-white border border-stone-200 rounded-sm p-4 hover:border-stone-400 transition-colors">
                         <div className="flex gap-3">
                           <div className="w-12 h-16 bg-stone-100 rounded-sm flex-shrink-0 overflow-hidden">
-                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={item.coverImage} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'⚙'}</div>}
+                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={getThumbPath(item.coverImage)} alt="" width={48} height={64} loading="lazy" decoding="async" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'⚙'}</div>}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-[#1C1917] text-sm">{item.title}</h4>
@@ -175,7 +176,7 @@ function SearchContent() {
                       <Link key={`a-${item.id}`} href={`/android/${item.id}`} className="block bg-white border border-stone-200 rounded-sm p-4 hover:border-stone-400 transition-colors">
                         <div className="flex gap-3">
                           <div className="w-12 h-16 bg-stone-100 rounded-sm flex-shrink-0 overflow-hidden">
-                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={item.coverImage} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'📱'}</div>}
+                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={getThumbPath(item.coverImage)} alt="" width={48} height={64} loading="lazy" decoding="async" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'📱'}</div>}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-[#1C1917] text-sm">{item.name}</h4>
@@ -197,7 +198,7 @@ function SearchContent() {
                       <Link key={`w-${item.id}`} href={`/windows/${item.id}`} className="block bg-white border border-stone-200 rounded-sm p-4 hover:border-stone-400 transition-colors">
                         <div className="flex gap-3">
                           <div className="w-12 h-16 bg-stone-100 rounded-sm flex-shrink-0 overflow-hidden">
-                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={item.coverImage} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'🖥'}</div>}
+                            {item.coverImage && item.coverImage !== '/images/default.svg' ? <img src={getThumbPath(item.coverImage)} alt="" width={48} height={64} loading="lazy" decoding="async" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-lg">{'🖥'}</div>}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-[#1C1917] text-sm">{item.name}</h4>

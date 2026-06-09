@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { getThumbPath } from '@/lib/image-paths'
 import type { Mod } from '@/lib/mod'
 
 function ModCard({ mod }: { mod: Mod }) {
@@ -11,7 +12,7 @@ function ModCard({ mod }: { mod: Mod }) {
       <article className="bg-white border border-stone-200 rounded-sm overflow-hidden hover:border-stone-400 transition-colors duration-200">
         <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
           {mod.coverImage && mod.coverImage !== '/images/default.svg' ? (
-            <img src={mod.coverImage} alt={mod.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            <img src={getThumbPath(mod.coverImage)} alt={mod.title} width={400} height={300} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-2xl">{'⚙'}</div>
           )}

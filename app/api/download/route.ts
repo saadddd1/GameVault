@@ -1,10 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllGames } from '@/lib/games'
-import { getAndroidById, getAllAndroid } from '@/lib/android'
-import { getWindowsById, getAllWindows } from '@/lib/windows'
-import { getModById, getAllMods } from '@/lib/mod'
-import fs from 'fs'
-import path from 'path'
+import { getAllGames, updateGame } from '@/lib/games'
+import { getAllMods, updateMod } from '@/lib/mod'
+import { getAllAndroid, updateAndroid } from '@/lib/android'
+import { getAllWindows, updateWindows } from '@/lib/windows'
+import { err } from '@/lib/api-helpers'
+
+interface Downloadable {
+  id: number
+  downloadCount: number
+  downloadLinks: { platform: string; url: string; password: string }[]
+}
+
+type ModuleHandler = {
+  getAll: () => { items: Downloadable[] }
+  updateCount: (id: number, count: number) => void
+}
+
+const handlers: Record<string, ModuleHandler> = {
+  game: {
+    getAll: () => ({ items: getAllGames().games }),
+    updateCount: (id, count) => { updateGame(id, { downloadCount: count }) },
+  },
+  mod: {
+    getAll: () => ({ items: getAllMods().mods }),
+    updateCount: (id, count) => { updateMod(id, { downloadCount: count }) },
+  },
+  android: {
+    getAll: () => ({ items: getAllAndroid().apps }),
+    updateCount: (id, count) => { updateAndroid(id, { downloadCount: count }) },
+  },
+  windows: {
+    getAll: () => ({ items: getAllWindows().apps }),
+    updateCount: (id, count) => { updateWindows(id, { downloadCount: count }) },
+  },
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -12,61 +41,21 @@ export async function GET(request: NextRequest) {
   const itemId = searchParams.get('id')
   const linkIndex = parseInt(searchParams.get('index') || '0')
 
-  if (!itemId) {
-    return NextResponse.json({ error: '缺少参数' }, { status: 400 })
-  }
+  if (!itemId) return err('缺少参数', 400)
+
+  const handler = handlers[type]
+  if (!handler) return err('无效的 type 参数', 400)
 
   const id = parseInt(itemId)
-  let link: { url: string } | undefined
+  const { items } = handler.getAll()
+  const item = items.find((i: Downloadable) => i.id === id)
+  if (!item) return err('内容不存在', 404)
 
-  try {
-    if (type === 'game') {
-      const data = getAllGames()
-      const item = data.games.find(g => g.id === id)
-      if (!item) return NextResponse.json({ error: '游戏不存在' }, { status: 404 })
-      link = item.downloadLinks[linkIndex]
-      if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
-      item.downloadCount++
-      fs.writeFileSync(path.join(process.cwd(), 'data/games.json'), JSON.stringify(data, null, 2))
-    } else if (type === 'mod') {
-      const data = getAllMods()
-      const item = data.mods.find(m => m.id === id)
-      if (!item) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
-      link = item.downloadLinks[linkIndex]
-      if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
-      item.downloadCount++
-      const idx = data.mods.findIndex(m => m.id === id)
-      if (idx !== -1) { data.mods[idx] = item; fs.writeFileSync(path.join(process.cwd(), 'data/mods.json'), JSON.stringify(data, null, 2)) }
-    } else if (type === 'android') {
-      const data = getAllAndroid()
-      const item = data.apps.find(a => a.id === id)
-      if (!item) return NextResponse.json({ error: '应用不存在' }, { status: 404 })
-      link = item.downloadLinks[linkIndex]
-      if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
-      item.downloadCount++
-      const index = data.apps.findIndex(a => a.id === id)
-      if (index !== -1) {
-        data.apps[index] = item
-        fs.writeFileSync(path.join(process.cwd(), 'data/android.json'), JSON.stringify(data, null, 2))
-      }
-    } else if (type === 'windows') {
-      const data = getAllWindows()
-      const item = data.apps.find(a => a.id === id)
-      if (!item) return NextResponse.json({ error: '应用不存在' }, { status: 404 })
-      link = item.downloadLinks[linkIndex]
-      if (!link) return NextResponse.json({ error: '下载链接不存在' }, { status: 404 })
-      item.downloadCount++
-      const index = data.apps.findIndex(a => a.id === id)
-      if (index !== -1) {
-        data.apps[index] = item
-        fs.writeFileSync(path.join(process.cwd(), 'data/windows.json'), JSON.stringify(data, null, 2))
-      }
-    } else {
-      return NextResponse.json({ error: '无效的type参数' }, { status: 400 })
-    }
+  const link = item.downloadLinks[linkIndex]
+  if (!link) return err('下载链接不存在', 404)
 
-    return NextResponse.redirect(link.url)
-  } catch (error) {
-    return NextResponse.json({ error: '下载处理失败' }, { status: 500 })
-  }
+  // 通过 lib 层的 update 函数更新计数（走缓存 + DataStore）
+  handler.updateCount(id, item.downloadCount + 1)
+
+  return NextResponse.redirect(link.url)
 }

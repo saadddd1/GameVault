@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Game } from '@/lib/games'
+import { getThumbPath } from '@/lib/image-paths'
 
 interface GameCardProps {
   game: Game
@@ -13,8 +14,12 @@ export default function GameCard({ game }: GameCardProps) {
         <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
           {game.coverImage && game.coverImage !== '/images/default.svg' ? (
             <img
-              src={game.coverImage}
+              src={getThumbPath(game.coverImage)}
               alt={game.title}
+              width={600}
+              height={450}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (

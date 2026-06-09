@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const data = getAllFeedbacks()
-    return NextResponse.json({ feedbacks: data.feedbacks })
+    const feedbacks = getAllFeedbacks()
+    return NextResponse.json({ feedbacks })
   } catch {
     return NextResponse.json({ error: '获取反馈失败' }, { status: 500 })
   }

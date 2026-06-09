@@ -50,7 +50,7 @@ export default function ModDetailPage() {
             <div className="lg:w-80 flex-shrink-0">
               <div className="relative aspect-[3/4] lg:aspect-auto lg:h-full bg-stone-100">
                 {mod.coverImage && mod.coverImage !== '/images/default.svg' ? (
-                  <img src={mod.coverImage} alt={mod.title} className="w-full h-full object-cover" />
+                  <img src={mod.coverImage} alt={mod.title} width={320} height={480} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full min-h-[300px] flex items-center justify-center"><span className="text-6xl">{'⚙'}</span></div>
                 )}

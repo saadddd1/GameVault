@@ -1,5 +1,4 @@
-import fs from 'fs'
-import path from 'path'
+import { DataStore } from './store'
 
 export interface Mod {
   id: number
@@ -29,46 +28,40 @@ export interface ModsData {
   games: string[]
 }
 
-const dataPath = path.join(process.cwd(), 'data/mods.json')
+const store = new DataStore<Mod>('mods', 'mods.json', 'mods')
 
 export function getAllMods(): ModsData {
-  const data = fs.readFileSync(dataPath, 'utf-8')
-  return JSON.parse(data)
+  const container = store.getContainer()
+  return { mods: container.mods as Mod[], categories: container.categories as string[], games: container.games as string[] }
 }
 
 export function getModById(id: number): Mod | undefined {
-  const { mods } = getAllMods()
-  return mods.find(m => m.id === id)
+  return store.getById(id)
 }
 
 export function addMod(mod: Omit<Mod, 'id' | 'downloadCount' | 'createdAt' | 'updatedAt'>): Mod {
-  const data = getAllMods()
-  const newId = data.mods.length > 0 ? Math.max(...data.mods.map(m => m.id)) + 1 : 1
   const now = new Date().toISOString()
-  const newMod: Mod = { ...mod, id: newId, downloadCount: 0, createdAt: now, updatedAt: now }
-  data.mods.push(newMod)
-  if (!data.games.includes(newMod.gameName)) data.games.push(newMod.gameName)
-  if (!data.categories.includes(newMod.category)) data.categories.push(newMod.category)
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
+  const newMod = store.add({ ...mod, downloadCount: 0, createdAt: now, updatedAt: now } as unknown as Omit<Mod, 'id'>)
+  maintainLists(newMod.category, newMod.gameName)
   return newMod
 }
 
 export function updateMod(id: number, updates: Partial<Omit<Mod, 'id' | 'createdAt'>>): Mod | null {
-  const data = getAllMods()
-  const index = data.mods.findIndex(m => m.id === id)
-  if (index === -1) return null
-  data.mods[index] = { ...data.mods[index], ...updates, updatedAt: new Date().toISOString() }
-  if (updates.gameName && !data.games.includes(updates.gameName)) data.games.push(updates.gameName)
-  if (updates.category && !data.categories.includes(updates.category)) data.categories.push(updates.category)
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  return data.mods[index]
+  const result = store.update(id, { ...updates, updatedAt: new Date().toISOString() })
+  if (result) maintainLists(updates.category, updates.gameName)
+  return result
 }
 
 export function deleteMod(id: number): boolean {
-  const data = getAllMods()
-  const index = data.mods.findIndex(m => m.id === id)
-  if (index === -1) return false
-  data.mods.splice(index, 1)
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  return true
+  return store.delete(id)
+}
+
+function maintainLists(cat?: string, game?: string) {
+  const container = store.getContainer()
+  const categories = container.categories as string[]
+  const games = container.games as string[]
+  let changed = false
+  if (cat && !categories.includes(cat)) { categories.push(cat); changed = true }
+  if (game && !games.includes(game)) { games.push(game); changed = true }
+  if (changed) store.updateContainer(c => ({ ...c, categories, games }))
 }

@@ -90,7 +90,7 @@ export default function WindowsDetailPage() {
             <div className="lg:w-80 flex-shrink-0">
               <div className="relative aspect-[3/4] lg:aspect-auto lg:h-full bg-stone-100">
                 {app.coverImage && app.coverImage !== '/images/default.svg' ? (
-                  <img src={app.coverImage} alt={app.name} className="w-full h-full object-cover" />
+                  <img src={app.coverImage} alt={app.name} width={320} height={480} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full min-h-[300px] flex items-center justify-center">
                     <svg className="w-24 h-24 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

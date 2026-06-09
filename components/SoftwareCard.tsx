@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getThumbPath } from '@/lib/image-paths'
 
 interface SoftwareCardProps {
   app: {
@@ -21,8 +22,12 @@ export default function SoftwareCard({ app, href }: SoftwareCardProps) {
         <div className="relative aspect-[4/3] overflow-hidden bg-stone-100">
           {app.coverImage && app.coverImage !== '/images/default.svg' ? (
             <img
-              src={app.coverImage}
+              src={getThumbPath(app.coverImage)}
               alt={app.name}
+              width={600}
+              height={450}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (

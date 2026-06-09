@@ -1,6 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { getAllMods, getModById, addMod, updateMod, deleteMod } from '@/lib/mod'
 import { requireAdmin } from '@/lib/auth'
+import { json, err, notFound, unauthorized } from '@/lib/api-helpers'
+
+function guard(req: NextRequest) {
+  return requireAdmin(req) ? null : unauthorized()
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,50 +13,48 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id')
     if (id) {
       const mod = getModById(parseInt(id))
-      if (!mod) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
-      return NextResponse.json({ mod })
+      if (!mod) return notFound('MOD 不存在')
+      return json({ mod })
     }
     const data = getAllMods()
-    return NextResponse.json({ mods: data.mods, categories: data.categories, games: data.games })
+    return json({ mods: data.mods, categories: data.categories, games: data.games })
   } catch {
-    return NextResponse.json({ error: '获取失败' }, { status: 500 })
+    return err('获取失败')
   }
 }
 
 export async function POST(request: NextRequest) {
-  if (!requireAdmin(request)) return NextResponse.json({ error: '未授权' }, { status: 401 })
+  const blocked = guard(request); if (blocked) return blocked
   try {
-    const body = await request.json()
-    const mod = addMod(body)
-    return NextResponse.json({ mod }, { status: 201 })
+    const mod = addMod(await request.json())
+    return json({ mod }, 201)
   } catch {
-    return NextResponse.json({ error: '添加失败' }, { status: 500 })
+    return err('添加失败')
   }
 }
 
 export async function PUT(request: NextRequest) {
-  if (!requireAdmin(request)) return NextResponse.json({ error: '未授权' }, { status: 401 })
+  const blocked = guard(request); if (blocked) return blocked
   try {
     const { id, ...updates } = await request.json()
-    if (!id) return NextResponse.json({ error: '缺少ID' }, { status: 400 })
+    if (!id) return err('缺少 ID', 400)
     const mod = updateMod(id, updates)
-    if (!mod) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
-    return NextResponse.json({ mod })
+    if (!mod) return notFound('MOD 不存在')
+    return json({ mod })
   } catch {
-    return NextResponse.json({ error: '更新失败' }, { status: 500 })
+    return err('更新失败')
   }
 }
 
 export async function DELETE(request: NextRequest) {
-  if (!requireAdmin(request)) return NextResponse.json({ error: '未授权' }, { status: 401 })
+  const blocked = guard(request); if (blocked) return blocked
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
-    if (!id) return NextResponse.json({ error: '缺少ID' }, { status: 400 })
-    const ok = deleteMod(parseInt(id))
-    if (!ok) return NextResponse.json({ error: 'MOD不存在' }, { status: 404 })
-    return NextResponse.json({ success: true })
+    if (!id) return err('缺少 ID', 400)
+    if (!deleteMod(parseInt(id))) return notFound('MOD 不存在')
+    return json({ success: true })
   } catch {
-    return NextResponse.json({ error: '删除失败' }, { status: 500 })
+    return err('删除失败')
   }
 }

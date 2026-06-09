@@ -97,6 +97,8 @@ export default function GameDetailPage() {
                   <img
                     src={game.coverImage}
                     alt={game.title}
+                    width={320}
+                    height={480}
                     className="w-full h-full object-cover"
                   />
                 ) : (

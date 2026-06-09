@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import GameCard from '@/components/GameCard'
 import SoftwareCard from '@/components/SoftwareCard'
+import { getThumbPath } from '@/lib/image-paths'
 import type { Game } from '@/lib/games'
 import type { AndroidApp } from '@/lib/android'
 import type { WindowsApp } from '@/lib/windows'
@@ -99,7 +100,7 @@ export default function HomePage() {
                 <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 p-5 lg:p-8">
                   <div className="w-20 h-28 lg:w-40 lg:h-56 flex-shrink-0 bg-stone-800 overflow-hidden rounded-sm">
                     {featuredGames[featuredIndex].coverImage && featuredGames[featuredIndex].coverImage !== '/images/default.svg' ? (
-                      <img src={featuredGames[featuredIndex].coverImage} alt="" className="w-full h-full object-cover" />
+                      <img src={featuredGames[featuredIndex].coverImage} alt="" fetchPriority="high" width={160} height={224} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-3xl lg:text-4xl">{'\u{1F3AE}'}</div>
                     )}
@@ -149,7 +150,7 @@ export default function HomePage() {
                   <article className="bg-white border border-stone-200 rounded-sm overflow-hidden hover:border-stone-400 transition-colors">
                     <div className="aspect-[4/3] bg-stone-100 overflow-hidden">
                       {game.coverImage && game.coverImage !== '/images/default.svg' ? (
-                        <img src={game.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <img src={getThumbPath(game.coverImage)} alt="" width={400} height={300} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-2xl">{'\u{1F3AE}'}</div>
                       )}

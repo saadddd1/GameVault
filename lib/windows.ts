@@ -1,5 +1,4 @@
-import fs from 'fs'
-import path from 'path'
+import { DataStore } from './store'
 
 export interface WindowsApp {
   id: number
@@ -26,54 +25,39 @@ export interface WindowsData {
   categories: string[]
 }
 
-const dataPath = path.join(process.cwd(), 'data/windows.json')
+const store = new DataStore<WindowsApp>('windows', 'windows.json', 'apps')
 
 export function getAllWindows(): WindowsData {
-  const data = fs.readFileSync(dataPath, 'utf-8')
-  return JSON.parse(data)
+  const container = store.getContainer()
+  return { apps: container.apps as WindowsApp[], categories: container.categories as string[] }
 }
 
 export function getWindowsById(id: number): WindowsApp | undefined {
-  const { apps } = getAllWindows()
-  return apps.find(a => a.id === id)
+  return store.getById(id)
 }
 
 export function addWindows(app: Omit<WindowsApp, 'id' | 'downloadCount' | 'createdAt' | 'updatedAt'>): WindowsApp {
-  const data = getAllWindows()
-  const newId = data.apps.length > 0 ? Math.max(...data.apps.map(a => a.id)) + 1 : 1
   const now = new Date().toISOString()
-  const newApp: WindowsApp = {
-    ...app,
-    id: newId,
-    downloadCount: 0,
-    createdAt: now,
-    updatedAt: now
-  }
-  data.apps.push(newApp)
-  if (!data.categories.includes(newApp.category)) {
-    data.categories.push(newApp.category)
-  }
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
+  const newApp = store.add({ ...app, downloadCount: 0, createdAt: now, updatedAt: now } as unknown as Omit<WindowsApp, 'id'>)
+  maintainCategory(newApp.category)
   return newApp
 }
 
 export function updateWindows(id: number, updates: Partial<Omit<WindowsApp, 'id' | 'createdAt'>>): WindowsApp | null {
-  const data = getAllWindows()
-  const index = data.apps.findIndex(a => a.id === id)
-  if (index === -1) return null
-  data.apps[index] = { ...data.apps[index], ...updates, updatedAt: new Date().toISOString() }
-  if (updates.category && !data.categories.includes(updates.category)) {
-    data.categories.push(updates.category)
-  }
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  return data.apps[index]
+  const result = store.update(id, { ...updates, updatedAt: new Date().toISOString() })
+  if (result && updates.category) maintainCategory(updates.category)
+  return result
 }
 
 export function deleteWindows(id: number): boolean {
-  const data = getAllWindows()
-  const index = data.apps.findIndex(a => a.id === id)
-  if (index === -1) return false
-  data.apps.splice(index, 1)
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  return true
+  return store.delete(id)
+}
+
+function maintainCategory(cat: string) {
+  const container = store.getContainer()
+  const categories = container.categories as string[]
+  if (!categories.includes(cat)) {
+    categories.push(cat)
+    store.updateContainer(c => ({ ...c, categories }))
+  }
 }

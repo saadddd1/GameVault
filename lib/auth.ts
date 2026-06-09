@@ -1,7 +1,6 @@
-import fs from 'fs'
-import path from 'path'
 import crypto from 'crypto'
 import bcrypt from 'bcryptjs'
+import { DataStore } from './store'
 
 export interface User {
   id: number
@@ -25,58 +24,47 @@ export interface UsersData {
   nextId: number
 }
 
-const dataPath = path.join(process.cwd(), 'data/users.json')
+const store = new DataStore<User>('users', 'users.json', 'users')
 
 export function getAllUsers(): UsersData {
-  const data = fs.readFileSync(dataPath, 'utf-8')
-  return JSON.parse(data)
+  const container = store.getContainer()
+  return { users: container.users as User[], nextId: container.nextId as number }
 }
 
 export function getSafeUsers(): SafeUser[] {
-  const { users } = getAllUsers()
-  return users.map(({ password, ...safe }) => safe)
+  return store.getAll().map(({ password, ...safe }) => safe)
 }
 
 export function getUserById(id: number): User | undefined {
-  const { users } = getAllUsers()
-  return users.find(user => user.id === id)
+  return store.getById(id)
 }
 
 export function getUserByUsername(username: string): User | undefined {
-  const { users } = getAllUsers()
-  return users.find(user => user.username === username)
+  return store.getAll().find(u => u.username === username)
 }
 
 export function getUserByEmail(email: string): User | undefined {
-  const { users } = getAllUsers()
-  return users.find(user => user.email === email)
+  return store.getAll().find(u => u.email === email)
 }
 
 export function createUser(userData: Omit<User, 'id' | 'createdAt' | 'role'> & { role?: 'user' | 'admin' }): SafeUser {
-  const data = getAllUsers()
+  if (getUserByUsername(userData.username)) throw new Error('用户名已存在')
+  if (getUserByEmail(userData.email)) throw new Error('邮箱已被注册')
 
-  if (getUserByUsername(userData.username)) {
-    throw new Error('用户名已存在')
-  }
-
-  if (getUserByEmail(userData.email)) {
-    throw new Error('邮箱已被注册')
-  }
-
+  const container = store.getContainer()
+  const nextId = container.nextId as number
   const hashedPassword = bcrypt.hashSync(userData.password, 10)
 
   const newUser: User = {
     ...userData,
     password: hashedPassword,
-    id: data.nextId,
+    id: nextId,
     role: userData.role || 'user',
     createdAt: new Date().toISOString()
   }
 
-  data.users.push(newUser)
-  data.nextId++
-
-  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2))
+  const users = [...store.getAll(), newUser]
+  store.updateContainer(c => ({ ...c, users, nextId: nextId + 1 }))
 
   const { password: _, ...safeUser } = newUser
   return safeUser
@@ -91,10 +79,14 @@ export function validateUser(username: string, password: string): SafeUser | nul
   return null
 }
 
-let _secret: string | null = null
+// -- Token --
+
+let _secret = ''
 
 function getSecret(): string {
   if (_secret) return _secret
+  const fs = require('fs')
+  const path = require('path')
   const secretPath = path.join(process.cwd(), 'data/.secret')
   try {
     _secret = fs.readFileSync(secretPath, 'utf-8').trim()
@@ -116,15 +108,11 @@ export function verifyToken(token: string): { userId: number; role: string } | n
   try {
     const [b64, sig] = token.split('.')
     const expectedSig = crypto.createHmac('sha256', getSecret()).update(b64).digest('base64url')
-    if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))) {
-      return null
-    }
+    if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))) return null
     const payload = JSON.parse(Buffer.from(b64, 'base64url').toString())
     if (payload.exp < Date.now()) return null
     return { userId: payload.userId, role: payload.role }
-  } catch {
-    return null
-  }
+  } catch { return null }
 }
 
 export function requireAdmin(request: Request): SafeUser | null {
