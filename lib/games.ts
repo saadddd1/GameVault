@@ -19,6 +19,14 @@ export interface Game {
   isHot: boolean
   isNew: boolean
   isFeatured: boolean
+  steamUrl?: string
+  developer?: string
+  publisher?: string
+  supportedLanguages?: string[]
+  systemRequirements?: {
+    minimum?: string
+    recommended?: string
+  }
 }
 
 export interface GamesData {

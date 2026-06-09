@@ -19,8 +19,8 @@ const notoSansSC = Noto_Sans_SC({
 });
 
 export const metadata: Metadata = {
-  title: "GameVault - 精品游戏分享平台",
-  description: "分享最新、最热的单机游戏资源，支持多种网盘下载方式",
+  title: "Geme Vault - 精品免费单机游戏",
+  description: "分享最新、最热的精品免费单机游戏资源，支持多种网盘下载方式",
 };
 
 export default function RootLayout({

@@ -12,9 +12,9 @@ apt-get install -y nginx
 npm install -g pm2
 
 echo "=== 项目目录 ==="
-mkdir -p /opt/gamevault
-cp -r . /opt/gamevault/
-cd /opt/gamevault
+mkdir -p /opt/gemevault
+cp -r . /opt/gemevault/
+cd /opt/gemevault
 
 echo "=== 初始化数据文件（如果不存在） ==="
 mkdir -p data
@@ -40,9 +40,9 @@ echo "=== 构建 ==="
 npm run build
 
 echo "=== Nginx 配置 ==="
-cp nginx.conf /etc/nginx/sites-available/gamevault
+cp nginx.conf /etc/nginx/sites-available/gemevault
 rm -f /etc/nginx/sites-enabled/default
-ln -sf /etc/nginx/sites-available/gamevault /etc/nginx/sites-enabled/gamevault
+ln -sf /etc/nginx/sites-available/gemevault /etc/nginx/sites-enabled/gemevault
 nginx -t && systemctl reload nginx
 
 echo "=== PM2 启动 ==="
@@ -55,7 +55,7 @@ echo "==================== 部署完成 ===================="
 echo "访问 http://服务器IP 即可"
 echo ""
 echo "首次登录: admin / 密码需用 bcrypt 生成后替换 data/users.json"
-echo "后续更新代码: ssh 到服务器，cd /opt/gamevault && bash update.sh"
+echo "后续更新代码: ssh 到服务器，cd /opt/gemevault && bash update.sh"
 echo "数据备份:   tar czf backup-\$(date +%Y%m%d).tar.gz data/"
 echo "================================================="
 echo ""

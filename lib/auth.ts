@@ -98,7 +98,7 @@ function getSecret(): string {
 }
 
 export function generateToken(userId: number, role: string): string {
-  const payload = JSON.stringify({ userId, role, exp: Date.now() + 7 * 24 * 3600 * 1000 })
+  const payload = JSON.stringify({ userId, role, exp: Date.now() + 24 * 3600 * 1000 })
   const b64 = Buffer.from(payload).toString('base64url')
   const sig = crypto.createHmac('sha256', getSecret()).update(b64).digest('base64url')
   return `${b64}.${sig}`

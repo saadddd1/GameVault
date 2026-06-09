@@ -7,7 +7,8 @@
       "description": "《黑神话：悟空》是一款以中国神话为背景的动作角色扮演游戏。故事取材自中国古典小说「四大名著」之一的《西游记》。你将扮演一位「天命人」，为了探寻昔日传说的真相，踏上一条充满危险与惊奇的西游之路。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2358720/header.jpg",
       "size": "130GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 2358720
     },
     {
       "id": 2,
@@ -16,7 +17,8 @@
       "description": "《艾尔登法环》是以黑暗奇幻世界为舞台的动作RPG游戏。由FromSoftware开发，万代南梦宫娱乐发行。游戏由宫崎英高与《冰与火之歌》作者乔治·R·R·马丁联手打造。走进辽阔的场景与地下迷宫探索未知，挑战困难重重的险境。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg",
       "size": "50GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 1245620
     },
     {
       "id": 3,
@@ -25,7 +27,8 @@
       "description": "《赛博朋克2077》是一款开放世界动作冒险RPG游戏，故事发生在夜之城——一个权力、魅力和身体改造至上的大都会。你扮演V，一名正在追寻一种独一无二的植入体的雇佣兵，这种植入体是通往永生的关键。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg",
       "size": "70GB",
-      "category": "角色扮演"
+      "category": "角色扮演",
+      "steamAppId": 1091500
     },
     {
       "id": 4,
@@ -34,7 +37,8 @@
       "description": "《侠盗猎车手V》是一款开放世界动作冒险游戏，由Rockstar North开发并由Rockstar Games发行。游戏设定在虚构的圣安地列斯州，讲述了三个主角的故事。当一名年轻聪明的街头骗子、一名退休的银行抢劫犯和一个让人毛骨悚然的变态发现自己身陷犯罪地下世界、美国政府机构和娱乐产业的种种恐怖纠缠之中时，他们必须完成一系列危险的抢劫。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/header.jpg",
       "size": "110GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 271590
     },
     {
       "id": 5,
@@ -43,7 +47,8 @@
       "description": "《荒野大镖客2》是一款由Rockstar Games制作并发行的开放世界动作冒险游戏。故事设定在1899年的美国，讲述了亚瑟·摩根和范德林德帮的故事。游戏拥有广袤的开放世界，精美的画面和深刻的叙事。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/header.jpg",
       "size": "150GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 1174180
     },
     {
       "id": 6,
@@ -52,7 +57,8 @@
       "description": "《幻兽帕鲁》是一款开放世界生存制作游戏，由Pocketpair开发。在广阔的世界中收集神奇的生物'帕鲁'，派他们进行战斗、建造、做农活、工业生产等。可以独自一人，也可以与朋友一起冒险。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/header.jpg",
       "size": "40GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 1623730
     },
     {
       "id": 7,
@@ -61,7 +67,8 @@
       "description": "《博德之门3》是由拉瑞安工作室开发的一款角色扮演游戏，基于龙与地下城第五版规则。召集你的队伍，返回被遗忘的国度，开启一段记载着友谊与背叛、牺牲与生存、以及至上力量诱惑的传奇故事。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/header.jpg",
       "size": "140GB",
-      "category": "角色扮演"
+      "category": "角色扮演",
+      "steamAppId": 1086940
     },
     {
       "id": 8,
@@ -70,7 +77,8 @@
       "description": "《霍格沃茨之遗》是一款沉浸式开放世界动作角色扮演游戏，故事背景设定在《哈利·波特》系列书籍中首次引入的世界。你将扮演一名握有古老秘密之钥匙的学生，那个秘密可能会将魔法世界撕裂。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/990080/header.jpg",
       "size": "85GB",
-      "category": "角色扮演"
+      "category": "角色扮演",
+      "steamAppId": 990080
     },
     {
       "id": 9,
@@ -79,7 +87,8 @@
       "description": "《地平线 西之绝境》是一款动作角色扮演游戏，由Guerrilla Games开发。与埃洛伊一道勇闯西部禁地，探索壮丽且危机四伏的土地，对抗庞大而可怕的机器，遇见奇特的新部落。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420110/header.jpg",
       "size": "120GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 2420110
     },
     {
       "id": 10,
@@ -88,7 +97,8 @@
       "description": "《怪物猎人：荒野》是卡普空开发的狩猎动作游戏系列最新作。在广袤无垠的荒野中，与各种庞然大物展开史诗级的狩猎。全新的无缝地图、动态天气系统，带给你前所未有的狩猎体验。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2246340/header.jpg",
       "size": "60GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 2246340
     },
     {
       "id": 11,
@@ -97,7 +107,8 @@
       "description": "《星露谷物语》是一款开放的乡村生活RPG游戏。你继承了爷爷在星露谷留下的老旧农场。带着爷爷留下的残旧工具和几枚硬币开始了你的新生活。你能适应这小镇上的生活，并让这个杂草丛生的老旧农场成为一个繁荣的家吗？",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/header.jpg",
       "size": "500MB",
-      "category": "休闲益智"
+      "category": "休闲益智",
+      "steamAppId": 413150
     },
     {
       "id": 12,
@@ -106,7 +117,8 @@
       "description": "《空洞骑士》是一款传统2D动画风格的银河恶魔城动作冒险游戏。探索庞大、交错连接的地下王国，与遭到感染的生物作战，结识奇异的虫子角色，揭开古老的秘密和隐藏在世界中心的谜团。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/header.jpg",
       "size": "9GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 367520
     },
     {
       "id": 13,
@@ -115,7 +127,8 @@
       "description": "《只狼：影逝二度》是由FromSoftware开发的动作冒险游戏。游戏设定在16世纪末的日本战国时代，玩家将扮演一名独臂忍者「只狼」，为保护拥有皇室血统的年轻皇子而与敌人展开殊死搏斗。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/814380/header.jpg",
       "size": "25GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 814380
     },
     {
       "id": 14,
@@ -124,7 +137,8 @@
       "description": "《巫师3：狂猎》是由CD Projekt RED制作的开放世界角色扮演游戏。你将扮演专业猎魔人利维亚的杰洛特，在一个无比庞大的黑暗奇幻世界中寻找预言之子。次世代版本带来光线追踪和画质提升。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/header.jpg",
       "size": "60GB",
-      "category": "角色扮演"
+      "category": "角色扮演",
+      "steamAppId": 292030
     },
     {
       "id": 15,
@@ -133,7 +147,8 @@
       "description": "《死亡搁浅》是一款由小岛秀夫制作的动作冒险游戏。传奇快递员山姆·波特·布里吉斯必须在被死亡搁浅彻底改变的世界中穿行，将破碎的美国最后的幸存者重新连接起来。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1850570/header.jpg",
       "size": "80GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 1850570
     },
     {
       "id": 16,
@@ -142,7 +157,8 @@
       "description": "《文明6》是一款回合制策略游戏，由Firaxis Games开发。在游戏中，你将带领你的文明从石器时代走向信息时代，通过外交、战争、扩张和科技发展，成为世界的领导者。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/289070/header.jpg",
       "size": "15GB",
-      "category": "策略模拟"
+      "category": "策略模拟",
+      "steamAppId": 289070
     },
     {
       "id": 17,
@@ -151,7 +167,8 @@
       "description": "《消逝的光芒2 人与仁之战》是一款开放世界动作RPG游戏，也是获奖作品《消逝的光芒》的续作。在这个被丧尸病毒摧毁的黑暗时代，你身为一名漂泊者，拥有改变城市命运的力量。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/534380/header.jpg",
       "size": "60GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 534380
     },
     {
       "id": 18,
@@ -160,7 +177,8 @@
       "description": "《战神》是索尼圣莫尼卡工作室开发的动作冒险游戏。奎托斯离开了奥林匹斯众神的阴影，作为一名普通人生活在北欧神话的领域中。他必须为生存而战，并教导儿子做到同样的事情。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1593500/header.jpg",
       "size": "70GB",
-      "category": "动作冒险"
+      "category": "动作冒险",
+      "steamAppId": 1593500
     },
     {
       "id": 19,
@@ -169,7 +187,8 @@
       "description": "《生化危机4 重制版》是卡普空开发的生存恐怖游戏。故事发生在浣熊市事件六年后，里昂·S·肯尼迪奉命前往欧洲某村庄营救总统女儿。采用现代技术完全重制，保留原作的精髓。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/header.jpg",
       "size": "55GB",
-      "category": "恐怖解谜"
+      "category": "恐怖解谜",
+      "steamAppId": 2050650
     },
     {
       "id": 20,
@@ -178,7 +197,8 @@
       "description": "《极限竞速：地平线5》是由Playground Games开发的开放世界竞速游戏。探索墨西哥充满活力且不断变化的开放世界景色，驾驶百辆世界级好车，享受无拘无束又有趣的驾驶体验。",
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1551360/header.jpg",
       "size": "130GB",
-      "category": "射击竞速"
+      "category": "射击竞速",
+      "steamAppId": 1551360
     }
   ]
 }

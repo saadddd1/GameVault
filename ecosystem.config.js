@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: 'gamevault',
+    name: 'gemevault',
     script: 'node_modules/.bin/next',
     args: 'start -p 3000',
     cwd: __dirname,

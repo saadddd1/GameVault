@@ -29,6 +29,21 @@ export async function GET(request: NextRequest) {
     const app = data?.[id]?.data
     if (!app) return NextResponse.json({ error: '未找到' }, { status: 404 })
 
+    // Parse system requirements (HTML -> extract text for display)
+    const reqs = app.pc_requirements || {}
+    const cleanReq = (html: string) => {
+      if (!html) return ''
+      return html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, '').trim()
+    }
+
+    // Parse supported languages (HTML string -> language name array)
+    const parseLanguages = (html: string): string[] => {
+      if (!html) return []
+      // Steam returns HTML like "<strong>English</strong><br>French<br>..."
+      const text = html.replace(/<[^>]*>/g, '')
+      return text.split(/\n|,|、|，/).map(s => s.replace(/\*|•|·/g, '').trim()).filter(s => s.length > 0 && s.length < 30)
+    }
+
     return NextResponse.json({
       name: app.name,
       description: (app.short_description || app.about_the_game || '').replace(/<[^>]*>/g, ''),
@@ -37,6 +52,13 @@ export async function GET(request: NextRequest) {
       releaseDate: app.release_date?.date || '',
       genres: (app.genres || []).map((g: { description: string }) => g.description),
       developers: app.developers || [],
+      publishers: app.publishers || [],
+      supportedLanguages: parseLanguages(app.supported_languages || ''),
+      systemRequirements: {
+        minimum: cleanReq(reqs.minimum || ''),
+        recommended: cleanReq(reqs.recommended || '')
+      },
+      steamUrl: `https://store.steampowered.com/app/${id}`,
       size: ''
     })
   } catch {

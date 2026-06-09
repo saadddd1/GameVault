@@ -3,12 +3,14 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { useAuth } from '@/components/AuthProvider'
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+  const { isAdmin } = useAuth()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,12 +46,13 @@ export default function Header() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group flex-shrink-0" onClick={closeMenus}>
-            <span className="text-lg lg:text-xl font-extrabold text-[#1C1917] tracking-wide">
-              GAMEVAULT
+          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0" onClick={closeMenus}>
+            <img src="/logo.png" alt="Geme Vault" className="h-8 w-8 lg:h-9 lg:w-9 object-contain" />
+            <span className="text-sm lg:text-base font-extrabold text-[#1C1917] tracking-wide">
+              GEME VAULT
             </span>
             <span className="hidden sm:block text-[11px] text-stone-400 tracking-wider">
-              游戏 · MOD · 工具 · Windows
+              精品免费单机游戏
             </span>
           </Link>
 
@@ -87,14 +90,6 @@ export default function Header() {
             >
               工具
             </Link>
-            <Link
-              href="/tools"
-              className={`px-3 py-1.5 text-sm font-medium transition-colors ${
-                pathname === '/tools' ? 'text-[#1E3A5F]' : 'text-stone-500 hover:text-[#1C1917]'
-              }`}
-            >
-              Windows软件
-            </Link>
           </nav>
 
           {/* 右侧区域 */}
@@ -119,6 +114,14 @@ export default function Header() {
                 </svg>
               </div>
             </form>
+
+            {/* 后台入口 */}
+            <Link
+              href={isAdmin ? '/admin' : '/login'}
+              className="text-xs text-stone-400 hover:text-[#1E3A5F] transition-colors flex-shrink-0"
+            >
+              {isAdmin ? '后台' : '登录'}
+            </Link>
           </div>
         </div>
       </div>
@@ -155,13 +158,11 @@ export default function Header() {
               工具
             </Link>
             <Link
-              href="/tools"
+              href={isAdmin ? '/admin' : '/login'}
               onClick={closeMenus}
-              className={`block px-3 py-2 text-sm font-medium rounded-sm ${
-                pathname === '/tools' ? 'text-[#1E3A5F] bg-stone-50' : 'text-stone-600'
-              }`}
+              className="block px-3 py-2 text-sm font-medium rounded-sm text-stone-600"
             >
-              Windows软件
+              {isAdmin ? '后台管理' : '登录'}
             </Link>
             {/* 移动端搜索 */}
             <form onSubmit={(e) => { handleSearch(e); closeMenus() }} className="pt-2">

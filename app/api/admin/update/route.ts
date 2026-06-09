@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   try {
     const output = await new Promise<string>((resolve, reject) => {
       exec(
-        'git pull origin master && npm ci --omit=dev && npm run build && pm2 reload gamevault',
+        'git pull origin master && npm ci --omit=dev && npm run build && pm2 reload gemevault',
         { cwd, timeout: 120000, env: { ...process.env, NODE_ENV: 'production' } },
         (err, stdout, stderr) => {
           if (err) reject(stderr || err.message)

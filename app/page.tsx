@@ -4,25 +4,29 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import GameCard from '@/components/GameCard'
 import SoftwareCard from '@/components/SoftwareCard'
-import Pagination from '@/components/Pagination'
-import { getThumbPath } from '@/lib/image-paths'
 import type { Game } from '@/lib/games'
+import type { Mod } from '@/lib/mod'
 import type { AndroidApp } from '@/lib/android'
 import type { WindowsApp } from '@/lib/windows'
 
-type SortKey = 'downloads' | 'newest' | 'featured'
+type GameSortKey = 'downloads' | 'newest' | 'featured'
+type ModSortKey = 'downloads' | 'newest'
+type ToolTab = 'windows' | 'android'
 
-const sortOptions: { key: SortKey; label: string }[] = [
+const gameSortOptions: { key: GameSortKey; label: string }[] = [
   { key: 'downloads', label: '下载排行' },
   { key: 'newest', label: '最新上架' },
   { key: 'featured', label: '精选推荐' },
 ]
 
-const PAGE_SIZES = [20, 40, 60]
+const modSortOptions: { key: ModSortKey; label: string }[] = [
+  { key: 'newest', label: '最新发布' },
+  { key: 'downloads', label: '下载排行' },
+]
 
 function SectionTitle({ title }: { title: string }) {
   return (
-    <h2 className="text-base lg:text-lg font-bold text-[#1C1917] border-l-[3px] border-[#1E3A5F] pl-3 mb-4 lg:mb-5 tracking-wide">
+    <h2 className="text-base lg:text-lg font-bold text-[#1C1917] border-l-[3px] border-[#1E3A5F] pl-3 mb-3 lg:mb-4 tracking-wide">
       {title}
     </h2>
   )
@@ -30,22 +34,25 @@ function SectionTitle({ title }: { title: string }) {
 
 export default function HomePage() {
   const [games, setGames] = useState<Game[]>([])
-  const [loading, setLoading] = useState(true)
-  const [sortBy, setSortBy] = useState<SortKey>('downloads')
-  const [featuredIndex, setFeaturedIndex] = useState(0)
+  const [mods, setMods] = useState<Mod[]>([])
   const [androidApps, setAndroidApps] = useState<AndroidApp[]>([])
   const [windowsApps, setWindowsApps] = useState<WindowsApp[]>([])
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+  const [loading, setLoading] = useState(true)
+  const [featuredIndex, setFeaturedIndex] = useState(0)
+  const [gameSort, setGameSort] = useState<GameSortKey>('downloads')
+  const [modSort, setModSort] = useState<ModSortKey>('newest')
+  const [toolTab, setToolTab] = useState<ToolTab>('windows')
 
   useEffect(() => {
     Promise.all([
       fetch('/api/games').then(r => r.json()),
+      fetch('/api/mods').then(r => r.json()),
       fetch('/api/android').then(r => r.json()),
       fetch('/api/windows').then(r => r.json()),
     ])
-      .then(([gameData, androidData, windowsData]) => {
+      .then(([gameData, modData, androidData, windowsData]) => {
         if (gameData.games) setGames(gameData.games)
+        if (modData.mods) setMods(modData.mods)
         if (androidData.apps) setAndroidApps(androidData.apps)
         if (windowsData.apps) setWindowsApps(windowsData.apps)
       })
@@ -53,10 +60,8 @@ export default function HomePage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const featuredGames = games.filter(g => g.isFeatured)
-  const editorPicks = featuredGames.slice(0, 8)
-
   // Hero carousel
+  const featuredGames = games.filter(g => g.isFeatured)
   useEffect(() => {
     if (featuredGames.length <= 1) return
     const timer = setInterval(() => {
@@ -65,21 +70,26 @@ export default function HomePage() {
     return () => clearInterval(timer)
   }, [featuredGames.length])
 
-  // Sorted games
-  const sorted = [...games].sort((a, b) => {
-    switch (sortBy) {
+  // Sorted previews
+  const sortedGames = [...games].sort((a, b) => {
+    switch (gameSort) {
       case 'downloads': return b.downloadCount - a.downloadCount
       case 'newest': return new Date(b.updateDate).getTime() - new Date(a.updateDate).getTime()
       case 'featured': return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)
       default: return 0
     }
-  })
+  }).slice(0, 10)
 
-  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize))
-  const safePage = Math.min(page, totalPages)
-  const paginated = sorted.slice((safePage - 1) * pageSize, safePage * pageSize)
+  const sortedMods = [...mods].sort((a, b) => {
+    switch (modSort) {
+      case 'downloads': return b.downloadCount - a.downloadCount
+      case 'newest': return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      default: return 0
+    }
+  }).slice(0, 10)
 
-  useEffect(() => { setPage(1) }, [sortBy])
+  const activeTools = toolTab === 'windows' ? windowsApps : androidApps
+  const sortedTools = [...activeTools].sort((a, b) => b.downloadCount - a.downloadCount).slice(0, 10)
 
   if (loading) {
     return (
@@ -141,103 +151,137 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* 编辑之选 */}
-        {editorPicks.length > 0 && (
-          <section className="mb-6 lg:mb-8">
-            <SectionTitle title="编辑之选" />
-            <div className="flex gap-3 lg:gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-              {editorPicks.map(game => (
-                <Link key={game.id} href={`/games/${game.id}`} className="flex-shrink-0 w-[140px] lg:w-[200px] group">
-                  <article className="bg-white border border-stone-200 rounded-sm overflow-hidden hover:border-stone-400 transition-colors">
-                    <div className="aspect-[4/3] bg-stone-100 overflow-hidden">
-                      {game.coverImage && game.coverImage !== '/images/default.svg' ? (
-                        <img src={getThumbPath(game.coverImage)} alt="" width={400} height={300} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-2xl">{'\u{1F3AE}'}</div>
-                      )}
-                    </div>
-                    <div className="p-2 lg:p-3">
-                      <h3 className="font-bold text-[#1C1917] text-xs lg:text-sm line-clamp-1">{game.title}</h3>
-                      <p className="text-[10px] lg:text-xs text-stone-400 mt-0.5 font-number">{game.size}</p>
-                    </div>
-                  </article>
-                </Link>
+        {/* 游戏区 */}
+        <section className="mb-6 lg:mb-8">
+          <div className="flex items-center justify-between mb-3 lg:mb-4">
+            <SectionTitle title="游戏" />
+            <div className="flex gap-1">
+              {gameSortOptions.map(opt => (
+                <button
+                  key={opt.key}
+                  onClick={() => setGameSort(opt.key)}
+                  className={`px-2.5 lg:px-3 py-1 text-xs lg:text-sm transition-colors rounded-sm ${
+                    gameSort === opt.key
+                      ? 'bg-[#1E3A5F] text-white font-medium'
+                      : 'text-stone-500 hover:text-[#1C1917]'
+                  }`}
+                >
+                  {opt.label}
+                </button>
               ))}
             </div>
-          </section>
-        )}
-
-        {/* 排序栏 */}
-        <div className="flex items-center justify-between mb-5 lg:mb-6">
-          <div className="flex gap-1 lg:gap-0">
-            {sortOptions.map(opt => (
-              <button
-                key={opt.key}
-                onClick={() => setSortBy(opt.key)}
-                className={`px-3 lg:px-4 py-1.5 text-sm transition-colors ${
-                  sortBy === opt.key
-                    ? 'bg-[#1E3A5F] text-white lg:bg-transparent lg:text-[#1E3A5F] lg:border-b-2 lg:border-[#1E3A5F] font-medium'
-                    : 'text-stone-500 hover:text-[#1C1917]'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
           </div>
-          <span className="text-xs text-stone-400 flex-shrink-0 ml-3 font-number">
-            共 {sorted.length} 款
-          </span>
-        </div>
-
-        {/* 全部游戏网格 */}
-        <section className="mb-8 lg:mb-10">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-            {paginated.map(game => (
+            {sortedGames.map(game => (
               <GameCard key={game.id} game={game} />
             ))}
           </div>
-
-          {/* 分页 */}
-          <Pagination
-            total={sorted.length}
-            page={safePage}
-            pageSize={pageSize}
-            pageSizes={PAGE_SIZES}
-            unit="款"
-            onPageChange={setPage}
-            onPageSizeChange={s => { setPageSize(s); setPage(1) }}
-          />
+          <div className="mt-4 text-center">
+            <Link href="/games" className="text-sm text-[#1E3A5F] hover:underline font-medium">
+              查看全部游戏 ({games.length} 款) →
+            </Link>
+          </div>
         </section>
 
-        {/* 安卓软件 */}
-        {androidApps.length > 0 && (
-          <section className="mb-8 lg:mb-10">
-            <div className="flex items-center justify-between mb-4 lg:mb-5">
-              <SectionTitle title="安卓软件" />
-              <Link href="/android" className="text-sm text-[#1E3A5F] hover:underline flex-shrink-0">查看更多 →</Link>
+        {/* MOD 区 */}
+        {mods.length > 0 && (
+          <section className="mb-6 lg:mb-8">
+            <div className="flex items-center justify-between mb-3 lg:mb-4">
+              <SectionTitle title="MOD" />
+              <div className="flex gap-1">
+                {modSortOptions.map(opt => (
+                  <button
+                    key={opt.key}
+                    onClick={() => setModSort(opt.key)}
+                    className={`px-2.5 lg:px-3 py-1 text-xs lg:text-sm transition-colors rounded-sm ${
+                      modSort === opt.key
+                        ? 'bg-[#1E3A5F] text-white font-medium'
+                        : 'text-stone-500 hover:text-[#1C1917]'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-              {androidApps.slice(0, 10).map(app => (
-                <SoftwareCard key={app.id} app={app} href={`/android/${app.id}`} />
+              {sortedMods.map(mod => (
+                <SoftwareCard
+                  key={mod.id}
+                  app={{
+                    id: mod.id,
+                    name: mod.title,
+                    description: mod.description,
+                    coverImage: mod.coverImage,
+                    category: mod.category,
+                    version: mod.version,
+                    fileSize: mod.fileSize,
+                    downloadCount: mod.downloadCount,
+                    subtitle: mod.gameName,
+                  }}
+                  href={`/mods/${mod.id}`}
+                />
               ))}
+            </div>
+            <div className="mt-4 text-center">
+              <Link href="/mods" className="text-sm text-[#1E3A5F] hover:underline font-medium">
+                查看更多 MOD ({mods.length} 款) →
+              </Link>
             </div>
           </section>
         )}
 
-        {/* Windows软件 */}
-        {windowsApps.length > 0 && (
-          <section className="mb-8 lg:mb-10">
-            <div className="flex items-center justify-between mb-4 lg:mb-5">
-              <SectionTitle title="Windows软件" />
-              <Link href="/windows" className="text-sm text-[#1E3A5F] hover:underline flex-shrink-0">查看更多 →</Link>
+        {/* 工具软件区 */}
+        <section className="mb-8 lg:mb-10">
+          <div className="flex items-center justify-between mb-3 lg:mb-4">
+            <SectionTitle title="工具软件" />
+            <div className="flex gap-0 bg-stone-100 rounded-sm p-0.5">
+              <button
+                onClick={() => setToolTab('windows')}
+                className={`px-3 py-1 text-xs lg:text-sm rounded-sm transition-colors ${
+                  toolTab === 'windows'
+                    ? 'bg-white text-[#1C1917] font-medium shadow-sm'
+                    : 'text-stone-500 hover:text-[#1C1917]'
+                }`}
+              >
+                Windows
+              </button>
+              <button
+                onClick={() => setToolTab('android')}
+                className={`px-3 py-1 text-xs lg:text-sm rounded-sm transition-colors ${
+                  toolTab === 'android'
+                    ? 'bg-white text-[#1C1917] font-medium shadow-sm'
+                    : 'text-stone-500 hover:text-[#1C1917]'
+                }`}
+              >
+                安卓
+              </button>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
-              {windowsApps.slice(0, 10).map(app => (
-                <SoftwareCard key={app.id} app={app} href={`/windows/${app.id}`} />
-              ))}
-            </div>
-          </section>
-        )}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-4">
+            {sortedTools.map(app => (
+              <SoftwareCard
+                key={app.id}
+                app={{
+                  id: app.id,
+                  name: app.name,
+                  description: app.description,
+                  coverImage: app.coverImage,
+                  category: app.category,
+                  version: (app as AndroidApp).version,
+                  fileSize: (app as WindowsApp).fileSize || (app as AndroidApp).fileSize,
+                  downloadCount: app.downloadCount,
+                }}
+                href={`/${toolTab === 'windows' ? 'windows' : 'android'}/${app.id}`}
+              />
+            ))}
+          </div>
+          <div className="mt-4 text-center">
+            <Link href={`/tools?tab=${toolTab}`} className="text-sm text-[#1E3A5F] hover:underline font-medium">
+              查看更多{toolTab === 'windows' ? 'Windows' : '安卓'}软件 ({activeTools.length} 款) →
+            </Link>
+          </div>
+        </section>
 
         {/* 移动端底部间距 */}
         <div className="lg:hidden h-14" />

@@ -12,7 +12,7 @@ interface DownloadLinksEditorProps {
   platforms?: string[]
 }
 
-const DEFAULT_PLATFORMS = ['百度网盘', '阿里云盘', '夸克网盘', '蓝奏云', '迅雷网盘', 'GitHub', '其他']
+const DEFAULT_PLATFORMS = ['百度网盘', '阿里云盘', '夸克网盘', 'UC网盘', '蓝奏云', '迅雷网盘', 'GitHub', '其他']
 
 export default function DownloadLinksEditor({ links, onChange, platforms = DEFAULT_PLATFORMS }: DownloadLinksEditorProps) {
   const addLink = () => {
@@ -34,19 +34,19 @@ export default function DownloadLinksEditor({ links, onChange, platforms = DEFAU
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium text-gray-900">下载链接</h3>
+        <h3 className="text-base font-medium text-[#1C1917]">下载链接</h3>
         <button
           type="button"
           onClick={addLink}
-          className="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
+          className="px-3 py-1.5 text-sm bg-[#1E3A5F]/10 text-[#1E3A5F] border border-[#1E3A5F]/20 rounded-sm hover:bg-[#1E3A5F]/20 transition-colors"
         >
           + 添加链接
         </button>
       </div>
       {links.map((link, i) => (
-        <div key={i} className="border rounded-lg p-4 bg-gray-50">
+        <div key={i} className="border border-stone-200 rounded-sm p-4 bg-stone-50">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-600">链接 {i + 1}</span>
+            <span className="text-sm font-medium text-stone-600">链接 {i + 1}</span>
             {links.length > 1 && (
               <button
                 type="button"
@@ -59,11 +59,11 @@ export default function DownloadLinksEditor({ links, onChange, platforms = DEFAU
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">平台</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">平台</label>
               <select
                 value={link.platform}
                 onChange={(e) => updateLink(i, 'platform', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] bg-white text-sm"
               >
                 {platforms.map(p => (
                   <option key={p} value={p}>{p}</option>
@@ -71,22 +71,22 @@ export default function DownloadLinksEditor({ links, onChange, platforms = DEFAU
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">链接地址</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">链接地址</label>
               <input
                 type="text"
                 value={link.url}
                 onChange={(e) => updateLink(i, 'url', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] bg-white text-sm"
                 placeholder="下载链接"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">提取码</label>
+              <label className="block text-sm font-medium text-stone-700 mb-1">提取码</label>
               <input
                 type="text"
                 value={link.password}
                 onChange={(e) => updateLink(i, 'password', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#1E3A5F] bg-white text-sm"
                 placeholder="可选"
               />
             </div>

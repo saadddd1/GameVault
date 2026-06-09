@@ -11,6 +11,7 @@ interface SoftwareCardProps {
     version?: string
     fileSize?: string
     downloadCount: number
+    subtitle?: string
   }
   href: string
 }
@@ -44,9 +45,12 @@ export default function SoftwareCard({ app, href }: SoftwareCardProps) {
           </div>
         </div>
         <div className="p-3 lg:p-4">
-          <h3 className="font-bold text-[#1C1917] mb-1.5 line-clamp-1 text-sm lg:text-base">
+          <h3 className="font-bold text-[#1C1917] mb-0.5 line-clamp-1 text-sm lg:text-base">
             {app.name}
           </h3>
+          {app.subtitle && (
+            <p className="text-xs text-stone-400 mb-1 line-clamp-1">{app.subtitle}</p>
+          )}
           <p className="text-xs lg:text-sm text-stone-500 mb-3 line-clamp-2 leading-relaxed">
             {app.description}
           </p>

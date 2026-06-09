@@ -1,18 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { addGame, getAllGames } from '@/lib/games'
 import { requireAdmin } from '@/lib/auth'
+import { checkBodySize } from '@/lib/api-helpers'
 import * as XLSX from 'xlsx'
+
+const ALLOWED_EXTENSIONS = ['.xlsx', '.xls']
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 export async function POST(request: NextRequest) {
   if (!requireAdmin(request)) {
     return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
   }
+
+  const tooLarge = checkBodySize(request, MAX_FILE_SIZE); if (tooLarge) return tooLarge
+
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
 
     if (!file) {
       return NextResponse.json({ error: '请上传文件' }, { status: 400 })
+    }
+
+    const fileName = file.name.toLowerCase()
+    if (!ALLOWED_EXTENSIONS.some(ext => fileName.endsWith(ext))) {
+      return NextResponse.json({ error: '仅支持 .xlsx / .xls 文件' }, { status: 400 })
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: '文件过大，最大 10MB' }, { status: 400 })
     }
 
     const buffer = await file.arrayBuffer()
