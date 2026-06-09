@@ -13,6 +13,9 @@ npm install
 echo "=== 构建 ==="
 npm run build
 
+echo "=== 精简依赖（移除 devDependencies） ==="
+npm prune --omit=dev
+
 echo "=== 重启服务（零停机 reload） ==="
 pm2 reload gemevault
 
