@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import GameCard from '@/components/GameCard'
 import SoftwareCard from '@/components/SoftwareCard'
+import Pagination from '@/components/Pagination'
 import { getThumbPath } from '@/lib/image-paths'
 import type { Game } from '@/lib/games'
 import type { AndroidApp } from '@/lib/android'
@@ -197,56 +198,15 @@ export default function HomePage() {
           </div>
 
           {/* 分页 */}
-          {totalPages > 1 && (
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-1 text-sm text-stone-500 font-number">
-                <span>第 {safePage}/{totalPages} 页</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={safePage <= 1}
-                  className="px-3 py-1.5 text-sm border border-stone-200 rounded-sm hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >上一页</button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(n => n === 1 || n === totalPages || Math.abs(n - safePage) <= 1)
-                  .reduce<(number | '...')[]>((acc, n, i, arr) => {
-                    if (i > 0 && n - (arr[i - 1] as number) > 1) acc.push('...')
-                    acc.push(n)
-                    return acc
-                  }, [])
-                  .map((item, i) =>
-                    item === '...' ? (
-                      <span key={`dots-${i}`} className="px-2 text-stone-300 text-sm">...</span>
-                    ) : (
-                      <button
-                        key={item}
-                        onClick={() => setPage(item)}
-                        className={`w-8 h-8 text-sm rounded-sm transition-colors font-number ${
-                          safePage === item ? 'bg-[#1E3A5F] text-white' : 'border border-stone-200 hover:bg-stone-100 text-stone-600'
-                        }`}
-                      >{item}</button>
-                    )
-                  )}
-                <button
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                  disabled={safePage >= totalPages}
-                  className="px-3 py-1.5 text-sm border border-stone-200 rounded-sm hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >下一页</button>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-stone-500">
-                <span>每页</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1) }}
-                  className="px-2 py-1.5 border border-stone-200 rounded-sm text-sm focus:outline-none focus:ring-1 focus:ring-[#1E3A5F]"
-                >
-                  {PAGE_SIZES.map(s => (<option key={s} value={s}>{s}</option>))}
-                </select>
-                <span>款</span>
-              </div>
-            </div>
-          )}
+          <Pagination
+            total={sorted.length}
+            page={safePage}
+            pageSize={pageSize}
+            pageSizes={PAGE_SIZES}
+            unit="款"
+            onPageChange={setPage}
+            onPageSizeChange={s => { setPageSize(s); setPage(1) }}
+          />
         </section>
 
         {/* 安卓软件 */}
