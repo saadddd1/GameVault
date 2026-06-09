@@ -23,7 +23,7 @@ type ItemBase = {
 
 export interface DetailConfig<T extends ItemBase> {
   apiUrl: string
-  dataKey: string
+  singleKey: string
   listHref: string
   listLabel: string
   notFoundLabel: string
@@ -47,15 +47,15 @@ export default function DetailPage<T extends ItemBase>({ config }: { config: Det
   const [showPasswords, setShowPasswords] = useState<{ [key: number]: boolean }>({})
 
   useEffect(() => {
-    fetch(config.apiUrl)
+    fetch(`${config.apiUrl}?id=${params.id}`)
       .then(r => r.json())
       .then(data => {
-        const list = data[config.dataKey] as T[] | undefined
-        if (list) setItem(list.find((i: T) => i.id === parseInt(params.id as string)) || null)
+        const found = data[config.singleKey]
+        if (found) setItem(found as T)
       })
-      .catch(console.error)
+      .catch(e => { console.error('DetailPage fetch failed:', e); setItem(null) })
       .finally(() => setLoading(false))
-  }, [params.id, config.apiUrl, config.dataKey])
+  }, [params.id, config.apiUrl, config.singleKey])
 
   const togglePassword = (index: number) => setShowPasswords(prev => ({ ...prev, [index]: true }))
 

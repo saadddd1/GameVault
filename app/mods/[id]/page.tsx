@@ -5,7 +5,7 @@ import type { Mod } from '@/lib/mod'
 
 const config: DetailConfig<Mod> = {
   apiUrl: '/api/mods',
-  dataKey: 'mods',
+  singleKey: 'mod',
   listHref: '/mods',
   listLabel: '游戏MOD',
   notFoundLabel: 'MOD不存在',

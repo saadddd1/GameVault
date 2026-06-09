@@ -5,7 +5,7 @@ import type { WindowsApp } from '@/lib/windows'
 
 const config: DetailConfig<WindowsApp> = {
   apiUrl: '/api/windows',
-  dataKey: 'apps',
+  singleKey: 'app',
   listHref: '/windows',
   listLabel: 'Windows软件',
   notFoundLabel: '应用不存在',

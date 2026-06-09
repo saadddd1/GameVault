@@ -16,14 +16,13 @@ export default function GameDetailPage() {
   const [showPasswords, setShowPasswords] = useState<Record<number, boolean>>({})
 
   useEffect(() => {
-    fetch('/api/games')
+    fetch(`/api/games?id=${params.id}`)
       .then(r => r.json())
       .then(data => {
-        const g = data.games?.find((item: Game) => item.id === parseInt(params.id as string))
-        if (g) setGame(g)
+        if (data.game) setGame(data.game as Game)
         else setNotFound(true)
       })
-      .catch(() => setNotFound(true))
+      .catch(e => { console.error('Game detail fetch failed:', e); setNotFound(true) })
       .finally(() => setLoading(false))
   }, [params.id])
 

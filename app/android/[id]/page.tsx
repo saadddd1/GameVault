@@ -5,7 +5,7 @@ import type { AndroidApp } from '@/lib/android'
 
 const config: DetailConfig<AndroidApp> = {
   apiUrl: '/api/android',
-  dataKey: 'apps',
+  singleKey: 'app',
   listHref: '/android',
   listLabel: '安卓软件',
   notFoundLabel: '应用不存在',
