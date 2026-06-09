@@ -36,7 +36,8 @@ export function createRoutes(config: Config) {
         return json({ [config.singleKey]: item })
       }
       return json(config.listResponse())
-    } catch {
+    } catch (e) {
+      console.error(`[${config.label}] GET failed:`, e)
       return err('获取失败')
     }
   }
@@ -52,7 +53,8 @@ export function createRoutes(config: Config) {
       if (!body.downloadLinks?.length) return err('至少需要一个下载链接', 400)
       const item = await config.add(body)
       return json({ [config.singleKey]: item }, 201)
-    } catch {
+    } catch (e) {
+      console.error(`[${config.label}] POST failed:`, e)
       return err('添加失败')
     }
   }
@@ -66,7 +68,8 @@ export function createRoutes(config: Config) {
       const item = await config.update(id, updates)
       if (!item) return notFound(notFoundMsg)
       return json({ [config.singleKey]: item })
-    } catch {
+    } catch (e) {
+      console.error(`[${config.label}] PUT failed:`, e)
       return err('更新失败')
     }
   }
@@ -79,7 +82,8 @@ export function createRoutes(config: Config) {
       if (!id) return err('缺少 ID', 400)
       if (!(await config.del(parseInt(id)))) return notFound(notFoundMsg)
       return json({ success: true })
-    } catch {
+    } catch (e) {
+      console.error(`[${config.label}] DELETE failed:`, e)
       return err('删除失败')
     }
   }

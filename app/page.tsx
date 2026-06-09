@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import GameCard from '@/components/GameCard'
 import SoftwareCard from '@/components/SoftwareCard'
+import ErrorState from '@/components/ErrorState'
 import type { Game } from '@/lib/games'
 import type { Mod } from '@/lib/mod'
 import type { AndroidApp } from '@/lib/android'
@@ -38,6 +39,7 @@ export default function HomePage() {
   const [androidApps, setAndroidApps] = useState<AndroidApp[]>([])
   const [windowsApps, setWindowsApps] = useState<WindowsApp[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [featuredIndex, setFeaturedIndex] = useState(0)
   const [gameSort, setGameSort] = useState<GameSortKey>('downloads')
   const [modSort, setModSort] = useState<ModSortKey>('newest')
@@ -56,7 +58,7 @@ export default function HomePage() {
         if (androidData.apps) setAndroidApps(androidData.apps)
         if (windowsData.apps) setWindowsApps(windowsData.apps)
       })
-      .catch(console.error)
+      .catch(e => { console.error('Homepage fetch failed:', e); setError(true) })
       .finally(() => setLoading(false))
   }, [])
 
@@ -97,6 +99,10 @@ export default function HomePage() {
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#1E3A5F]"></div>
       </div>
     )
+  }
+
+  if (error) {
+    return <ErrorState onRetry={() => { setError(false); setLoading(true); }} />
   }
 
   return (

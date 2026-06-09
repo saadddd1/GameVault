@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Pagination from './Pagination'
+import ErrorState from './ErrorState'
 
 export interface DataListConfig {
   /** 页面标题 */
@@ -55,6 +56,7 @@ export default function DataList({ config }: Props) {
 
   const [items, setItems] = useState<unknown[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [sortBy, setSortBy] = useState(sort || config.sortOptions[0]?.value || 'default')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
@@ -63,7 +65,7 @@ export default function DataList({ config }: Props) {
     fetch(config.apiUrl)
       .then(r => r.json())
       .then(data => { if (data[config.dataKey]) setItems(data[config.dataKey]) })
-      .catch(console.error)
+      .catch(e => { console.error('DataList fetch failed:', e); setError(true) })
       .finally(() => setLoading(false))
   }, [config.apiUrl, config.dataKey])
 
@@ -94,6 +96,10 @@ export default function DataList({ config }: Props) {
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E3A5F]"></div>
       </div>
     )
+  }
+
+  if (error) {
+    return <ErrorState onRetry={() => { setError(false); setLoading(true); }} />
   }
 
   return (
