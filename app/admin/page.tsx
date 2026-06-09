@@ -16,10 +16,26 @@ export default function AdminDashboard() {
     totalGames: 0, hotGames: 0, newGames: 0, totalAndroid: 0, totalWindows: 0
   })
   const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(false)
+  const [updateMsg, setUpdateMsg] = useState('')
 
   useEffect(() => {
     fetch('/api/stats').then(r => r.json()).then(setStats).catch(console.error).finally(() => setLoading(false))
   }, [])
+
+  const handleUpdate = async () => {
+    if (!confirm('确定要从 GitHub 拉取最新代码并重启服务？')) return
+    setUpdating(true)
+    setUpdateMsg('')
+    try {
+      const res = await fetch('/api/admin/update', { method: 'POST' })
+      const data = await res.json()
+      setUpdateMsg(data.success ? '更新成功！服务已重启' : '更新失败: ' + data.error)
+    } catch {
+      setUpdateMsg('请求失败，请检查服务器状态')
+    }
+    setUpdating(false)
+  }
 
   const statCards = [
     { title: '游戏总数', value: stats.totalGames, color: 'from-blue-500 to-blue-600', link: '/admin/games' },
@@ -69,7 +85,26 @@ export default function AdminDashboard() {
             <div className="w-10 h-10 bg-sky-100 rounded-lg flex items-center justify-center"><svg className="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg></div>
             <div><div className="font-medium text-gray-900">添加Windows软件</div><div className="text-sm text-gray-500">发布Windows应用资源</div></div>
           </Link>
+          <button
+            onClick={handleUpdate}
+            disabled={updating}
+            className="flex items-center gap-3 p-4 rounded-lg border-2 border-dashed border-gray-200 hover:border-amber-400 hover:bg-amber-50 transition-all disabled:opacity-50"
+          >
+            <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+              {updating ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-amber-600"></div>
+              ) : (
+                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              )}
+            </div>
+            <div><div className="font-medium text-gray-900">{updating ? '更新中...' : '更新代码'}</div><div className="text-sm text-gray-500">从 GitHub 拉取并重启</div></div>
+          </button>
         </div>
+        {updateMsg && (
+          <div className={`mt-4 p-3 rounded text-sm font-medium ${updateMsg.includes('成功') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+            {updateMsg}
+          </div>
+        )}
       </div>
     </div>
   )
