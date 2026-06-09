@@ -39,29 +39,29 @@ export function getModById(id: number): Mod | undefined {
   return store.getById(id)
 }
 
-export function addMod(mod: Omit<Mod, 'id' | 'downloadCount' | 'createdAt' | 'updatedAt'>): Mod {
+export async function addMod(mod: Omit<Mod, 'id' | 'downloadCount' | 'createdAt' | 'updatedAt'>): Promise<Mod> {
   const now = new Date().toISOString()
-  const newMod = store.add({ ...mod, downloadCount: 0, createdAt: now, updatedAt: now } as unknown as Omit<Mod, 'id'>)
-  maintainLists(newMod.category, newMod.gameName)
+  const newMod = await store.add({ ...mod, downloadCount: 0, createdAt: now, updatedAt: now } as unknown as Omit<Mod, 'id'>)
+  await maintainLists(newMod.category, newMod.gameName)
   return newMod
 }
 
-export function updateMod(id: number, updates: Partial<Omit<Mod, 'id' | 'createdAt'>>): Mod | null {
-  const result = store.update(id, { ...updates, updatedAt: new Date().toISOString() })
-  if (result) maintainLists(updates.category, updates.gameName)
+export async function updateMod(id: number, updates: Partial<Omit<Mod, 'id' | 'createdAt'>>): Promise<Mod | null> {
+  const result = await store.update(id, { ...updates, updatedAt: new Date().toISOString() })
+  if (result) await maintainLists(updates.category, updates.gameName)
   return result
 }
 
-export function deleteMod(id: number): boolean {
+export async function deleteMod(id: number): Promise<boolean> {
   return store.delete(id)
 }
 
-function maintainLists(cat?: string, game?: string) {
+async function maintainLists(cat?: string, game?: string) {
   const container = store.getContainer()
   const categories = container.categories as string[]
   const games = container.games as string[]
   let changed = false
   if (cat && !categories.includes(cat)) { categories.push(cat); changed = true }
   if (game && !games.includes(game)) { games.push(game); changed = true }
-  if (changed) store.updateContainer(c => ({ ...c, categories, games }))
+  if (changed) await store.updateContainer(c => ({ ...c, categories, games }))
 }

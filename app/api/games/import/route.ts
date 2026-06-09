@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         }
 
         maxId++
-        addGame({
+        await addGame({
           title: String(title),
           description: String(description),
           coverImage: row['封面图片'] ? String(row['封面图片']) : '/images/default.svg',

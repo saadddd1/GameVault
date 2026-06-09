@@ -1,10 +1,11 @@
-// 泛型数据存储 — 统一 CRUD + 缓存，消除 5 个 lib 文件的重复代码
 import fs from 'fs'
 import path from 'path'
 import { getCached, invalidate } from './cache'
+import { Mutex } from './lock'
 
 export class DataStore<T extends { id: number }> {
   private dataPath: string
+  private mutex = new Mutex()
 
   constructor(
     private cacheKey: string,
@@ -21,12 +22,15 @@ export class DataStore<T extends { id: number }> {
     })
   }
 
+  // 原子写入：先写临时文件，再 rename，防止进程崩溃时文件损坏
   private writeContainer(container: Record<string, unknown>) {
-    fs.writeFileSync(this.dataPath, JSON.stringify(container))
+    const tmp = this.dataPath + '.tmp'
+    fs.writeFileSync(tmp, JSON.stringify(container))
+    fs.renameSync(tmp, this.dataPath)
     invalidate(this.cacheKey)
   }
 
-  // -- 列表操作 --
+  // -- 读操作（无锁） --
 
   getAll(): T[] {
     return (this.readContainer()[this.listKey] as T[]) || []
@@ -36,48 +40,66 @@ export class DataStore<T extends { id: number }> {
     return this.getAll().find((item: T) => item.id === id)
   }
 
-  // -- 写操作 --
+  // -- 写操作（持锁 + 原子写） --
 
-  add(item: Omit<T, 'id'>): T {
-    const container = this.readContainer()
-    const items = this.getAll()
-    const newId = items.length > 0 ? Math.max(...items.map((i: T) => i.id)) + 1 : 1
-    const newItem = { ...item, id: newId } as unknown as T
-    items.push(newItem)
-    container[this.listKey] = items
-    this.writeContainer(container)
-    return newItem
+  async add(item: Omit<T, 'id'>): Promise<T> {
+    const release = await this.mutex.acquire()
+    try {
+      const container = this.readContainer()
+      const items = (container[this.listKey] as T[]) || []
+      const newId = items.length > 0 ? Math.max(...items.map((i: T) => i.id)) + 1 : 1
+      const newItem = { ...item, id: newId } as unknown as T
+      items.push(newItem)
+      container[this.listKey] = items
+      this.writeContainer(container)
+      return newItem
+    } finally {
+      release()
+    }
   }
 
-  update(id: number, updates: Partial<T>): T | null {
-    const container = this.readContainer()
-    const items = this.getAll()
-    const index = items.findIndex((i: T) => i.id === id)
-    if (index === -1) return null
-    items[index] = { ...items[index], ...updates, id }
-    container[this.listKey] = items
-    this.writeContainer(container)
-    return items[index]
+  async update(id: number, updates: Partial<T>): Promise<T | null> {
+    const release = await this.mutex.acquire()
+    try {
+      const container = this.readContainer()
+      const items = (container[this.listKey] as T[]) || []
+      const index = items.findIndex((i: T) => i.id === id)
+      if (index === -1) return null
+      items[index] = { ...items[index], ...updates, id }
+      container[this.listKey] = items
+      this.writeContainer(container)
+      return items[index]
+    } finally {
+      release()
+    }
   }
 
-  delete(id: number): boolean {
-    const container = this.readContainer()
-    const items = this.getAll()
-    const index = items.findIndex((i: T) => i.id === id)
-    if (index === -1) return false
-    items.splice(index, 1)
-    container[this.listKey] = items
-    this.writeContainer(container)
-    return true
+  async delete(id: number): Promise<boolean> {
+    const release = await this.mutex.acquire()
+    try {
+      const container = this.readContainer()
+      const items = (container[this.listKey] as T[]) || []
+      const index = items.findIndex((i: T) => i.id === id)
+      if (index === -1) return false
+      items.splice(index, 1)
+      container[this.listKey] = items
+      this.writeContainer(container)
+      return true
+    } finally {
+      release()
+    }
   }
-
-  // -- 容器级操作（给需要管理 categories/games 等额外字段的模块） --
 
   getContainer(): Record<string, unknown> {
     return this.readContainer()
   }
 
-  updateContainer(updater: (c: Record<string, unknown>) => Record<string, unknown>) {
-    this.writeContainer(updater(this.readContainer()))
+  async updateContainer(updater: (c: Record<string, unknown>) => Record<string, unknown>) {
+    const release = await this.mutex.acquire()
+    try {
+      this.writeContainer(updater(this.readContainer()))
+    } finally {
+      release()
+    }
   }
 }

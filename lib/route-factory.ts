@@ -50,7 +50,7 @@ export function createRoutes(config: Config) {
         if (!body[f]) return err('缺少必填字段', 400)
       }
       if (!body.downloadLinks?.length) return err('至少需要一个下载链接', 400)
-      const item = config.add(body)
+      const item = await config.add(body)
       return json({ [config.singleKey]: item }, 201)
     } catch {
       return err('添加失败')
@@ -63,7 +63,7 @@ export function createRoutes(config: Config) {
     try {
       const { id, ...updates } = await request.json()
       if (!id) return err('缺少 ID', 400)
-      const item = config.update(id, updates)
+      const item = await config.update(id, updates)
       if (!item) return notFound(notFoundMsg)
       return json({ [config.singleKey]: item })
     } catch {
@@ -77,7 +77,7 @@ export function createRoutes(config: Config) {
       const { searchParams } = new URL(request.url)
       const id = searchParams.get('id')
       if (!id) return err('缺少 ID', 400)
-      if (!config.del(parseInt(id))) return notFound(notFoundMsg)
+      if (!(await config.del(parseInt(id)))) return notFound(notFoundMsg)
       return json({ success: true })
     } catch {
       return err('删除失败')

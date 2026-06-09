@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '缺少必填字段' }, { status: 400 })
     }
 
-    const feedback = addFeedback({ targetType, targetId, targetName, content })
+    const feedback = await addFeedback({ targetType, targetId, targetName, content })
     return NextResponse.json({ success: true, feedback })
   } catch {
     return NextResponse.json({ error: '提交反馈失败' }, { status: 500 })
@@ -41,7 +41,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const { id } = await request.json()
-    const feedback = toggleFeedbackResolved(id)
+    const feedback = await toggleFeedbackResolved(id)
     if (!feedback) return NextResponse.json({ error: '反馈不存在' }, { status: 404 })
     return NextResponse.json({ feedback })
   } catch {

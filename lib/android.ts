@@ -36,28 +36,28 @@ export function getAndroidById(id: number): AndroidApp | undefined {
   return store.getById(id)
 }
 
-export function addAndroid(app: Omit<AndroidApp, 'id' | 'downloadCount' | 'createdAt' | 'updatedAt'>): AndroidApp {
+export async function addAndroid(app: Omit<AndroidApp, 'id' | 'downloadCount' | 'createdAt' | 'updatedAt'>): Promise<AndroidApp> {
   const now = new Date().toISOString()
-  const newApp = store.add({ ...app, downloadCount: 0, createdAt: now, updatedAt: now } as unknown as Omit<AndroidApp, 'id'>)
-  maintainCategory(newApp.category)
+  const newApp = await store.add({ ...app, downloadCount: 0, createdAt: now, updatedAt: now } as unknown as Omit<AndroidApp, 'id'>)
+  await maintainCategory(newApp.category)
   return newApp
 }
 
-export function updateAndroid(id: number, updates: Partial<Omit<AndroidApp, 'id' | 'createdAt'>>): AndroidApp | null {
-  const result = store.update(id, { ...updates, updatedAt: new Date().toISOString() })
-  if (result && updates.category) maintainCategory(updates.category)
+export async function updateAndroid(id: number, updates: Partial<Omit<AndroidApp, 'id' | 'createdAt'>>): Promise<AndroidApp | null> {
+  const result = await store.update(id, { ...updates, updatedAt: new Date().toISOString() })
+  if (result && updates.category) await maintainCategory(updates.category)
   return result
 }
 
-export function deleteAndroid(id: number): boolean {
+export async function deleteAndroid(id: number): Promise<boolean> {
   return store.delete(id)
 }
 
-function maintainCategory(cat: string) {
+async function maintainCategory(cat: string) {
   const container = store.getContainer()
   const categories = container.categories as string[]
   if (!categories.includes(cat)) {
     categories.push(cat)
-    store.updateContainer(c => ({ ...c, categories }))
+    await store.updateContainer(c => ({ ...c, categories }))
   }
 }

@@ -33,25 +33,25 @@ interface Downloadable {
 
 type ModuleHandler = {
   getAll: () => { items: Downloadable[] }
-  updateCount: (id: number, count: number) => void
+  updateCount: (id: number, count: number) => Promise<void>
 }
 
 const handlers: Record<string, ModuleHandler> = {
   game: {
     getAll: () => ({ items: getAllGames().games }),
-    updateCount: (id, count) => { updateGame(id, { downloadCount: count }) },
+    updateCount: (id, count) => updateGame(id, { downloadCount: count }).then(() => {}),
   },
   mod: {
     getAll: () => ({ items: getAllMods().mods }),
-    updateCount: (id, count) => { updateMod(id, { downloadCount: count }) },
+    updateCount: (id, count) => updateMod(id, { downloadCount: count }).then(() => {}),
   },
   android: {
     getAll: () => ({ items: getAllAndroid().apps }),
-    updateCount: (id, count) => { updateAndroid(id, { downloadCount: count }) },
+    updateCount: (id, count) => updateAndroid(id, { downloadCount: count }).then(() => {}),
   },
   windows: {
     getAll: () => ({ items: getAllWindows().apps }),
-    updateCount: (id, count) => { updateWindows(id, { downloadCount: count }) },
+    updateCount: (id, count) => updateWindows(id, { downloadCount: count }).then(() => {}),
   },
 }
 
@@ -76,8 +76,8 @@ export async function GET(request: NextRequest) {
 
   if (!isAllowedRedirect(link.url)) return err('不支持的下载链接', 400)
 
-  // 通过 lib 层的 update 函数更新计数（走缓存 + DataStore）
-  handler.updateCount(id, item.downloadCount + 1)
+  // 通过 lib 层的 update 函数更新计数（走锁保护的 DataStore）
+  await handler.updateCount(id, item.downloadCount + 1)
 
   return NextResponse.redirect(link.url)
 }

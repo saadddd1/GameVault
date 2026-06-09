@@ -45,31 +45,30 @@ export function getGameById(id: number): Game | undefined {
   return store.getById(id)
 }
 
-export function addGame(game: Omit<Game, 'id'>): Game {
-  const newGame = store.add(game)
-  // 维护 categories
+export async function addGame(game: Omit<Game, 'id'>): Promise<Game> {
+  const newGame = await store.add(game)
   const container = store.getContainer()
   const categories = container.categories as string[]
   if (!categories.includes(newGame.category)) {
     categories.push(newGame.category)
-    store.updateContainer(c => ({ ...c, categories }))
+    await store.updateContainer(c => ({ ...c, categories }))
   }
   return newGame
 }
 
-export function updateGame(id: number, updates: Partial<Omit<Game, 'id'>>): Game | null {
-  const result = store.update(id, updates)
+export async function updateGame(id: number, updates: Partial<Omit<Game, 'id'>>): Promise<Game | null> {
+  const result = await store.update(id, updates)
   if (result && updates.category) {
     const container = store.getContainer()
     const categories = container.categories as string[]
     if (!categories.includes(updates.category)) {
       categories.push(updates.category)
-      store.updateContainer(c => ({ ...c, categories }))
+      await store.updateContainer(c => ({ ...c, categories }))
     }
   }
   return result
 }
 
-export function deleteGame(id: number): boolean {
+export async function deleteGame(id: number): Promise<boolean> {
   return store.delete(id)
 }

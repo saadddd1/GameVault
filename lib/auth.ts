@@ -47,7 +47,7 @@ export function getUserByEmail(email: string): User | undefined {
   return store.getAll().find(u => u.email === email)
 }
 
-export function createUser(userData: Omit<User, 'id' | 'createdAt' | 'role'> & { role?: 'user' | 'admin' }): SafeUser {
+export async function createUser(userData: Omit<User, 'id' | 'createdAt' | 'role'> & { role?: 'user' | 'admin' }): Promise<SafeUser> {
   if (getUserByUsername(userData.username)) throw new Error('用户名已存在')
   if (getUserByEmail(userData.email)) throw new Error('邮箱已被注册')
 
@@ -64,7 +64,7 @@ export function createUser(userData: Omit<User, 'id' | 'createdAt' | 'role'> & {
   }
 
   const users = [...store.getAll(), newUser]
-  store.updateContainer(c => ({ ...c, users, nextId: nextId + 1 }))
+  await store.updateContainer(c => ({ ...c, users, nextId: nextId + 1 }))
 
   const { password: _, ...safeUser } = newUser
   return safeUser

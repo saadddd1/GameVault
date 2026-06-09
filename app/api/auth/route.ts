@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       try {
         // Setup mode: no admin exists, allow first admin creation
         if (!hasAdmin) {
-          const user = createUser({ username, password, email, role: 'admin' })
+          const user = await createUser({ username, password, email, role: 'admin' })
           const token = generateToken(user.id, user.role)
           return NextResponse.json({ success: true, user, token })
         }
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         if (!admin) {
           return NextResponse.json({ error: '需要管理员权限' }, { status: 403 })
         }
-        const user = createUser({ username, password, email, role: body.role || 'admin' })
+        const user = await createUser({ username, password, email, role: body.role || 'admin' })
         const token = generateToken(user.id, user.role)
         return NextResponse.json({ success: true, user, token })
       } catch {

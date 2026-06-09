@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
 
         const tags = row['标签'] ? String(row['标签']).split(',').map(t => t.trim()).filter(Boolean) : (row['tags'] || [])
 
-        addAndroid({
+        await addAndroid({
           name: String(name),
           description: String(description),
           coverImage: row['封面图片'] ? String(row['封面图片']) : '/images/default.svg',
