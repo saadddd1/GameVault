@@ -1,7 +1,6 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
   poweredByHeader: false,
   compress: false, // nginx 处理 gzip
 
