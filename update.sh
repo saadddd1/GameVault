@@ -8,7 +8,7 @@ echo "=== 拉取最新代码 ==="
 git pull origin master
 
 echo "=== 安装依赖 ==="
-npm ci --omit=dev
+npm install
 
 echo "=== 构建 ==="
 npm run build

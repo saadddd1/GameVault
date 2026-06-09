@@ -33,6 +33,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .gstack/
+_deploy.js
 # 生产数据 — 不跟踪，防止 git pull 覆盖服务器数据
 data/*.json
 data/.secret

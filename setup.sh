@@ -34,7 +34,7 @@ for f in games.json mods.json android.json windows.json users.json feedback.json
 done
 
 echo "=== 安装依赖 ==="
-npm ci --omit=dev
+npm install
 
 echo "=== 构建 ==="
 npm run build
