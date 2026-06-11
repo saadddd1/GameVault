@@ -11,14 +11,14 @@ export async function POST(request: Request) {
 
   try {
     const output = await new Promise<string>((resolve, reject) => {
-      exec(
-        'git pull origin master && npm ci --omit=dev && npm run build && pm2 reload gemevault',
-        { cwd, timeout: 120000, env: { ...process.env, NODE_ENV: 'production' } },
-        (err, stdout, stderr) => {
-          if (err) reject(stderr || err.message)
-          else resolve(stdout)
-        }
-      )
+      exec('bash update.sh', {
+        cwd,
+        timeout: 180000,
+        env: { ...process.env, NODE_ENV: 'production' },
+      }, (err, stdout, stderr) => {
+        if (err) reject(stderr || err.message)
+        else resolve(stdout)
+      })
     })
 
     return NextResponse.json({ success: true, output })
