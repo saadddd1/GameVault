@@ -9,7 +9,7 @@ module.exports = {
       PORT: '3000',
       NODE_OPTIONS: '--max-old-space-size=384'
     },
-    max_memory_restart: '400M',
+    max_memory_restart: '450M',
     instances: 1,
     exec_mode: 'fork',
     autorestart: true,
