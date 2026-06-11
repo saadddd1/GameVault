@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'gemevault',
     script: 'node_modules/.bin/next',
-    args: 'start -p 3000',
+    args: 'start -p 3000 -H 127.0.0.1',
     cwd: __dirname,
     env: {
       NODE_ENV: 'production',
@@ -13,7 +13,7 @@ module.exports = {
     instances: 1,
     exec_mode: 'fork',
     autorestart: true,
-    max_restarts: 10,
+    max_restarts: 50,
     restart_delay: 5000
   }]
 }
