@@ -5,6 +5,7 @@ import Link from 'next/link'
 import GameCard from '@/components/GameCard'
 import SoftwareCard from '@/components/SoftwareCard'
 import ErrorState from '@/components/ErrorState'
+import HomeSkeleton from '@/components/HomeSkeleton'
 import type { Game } from '@/lib/games'
 import type { Mod } from '@/lib/mod'
 import type { AndroidApp } from '@/lib/android'
@@ -94,11 +95,7 @@ export default function HomePage() {
   const sortedTools = [...activeTools].sort((a, b) => b.downloadCount - a.downloadCount).slice(0, 10)
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FAFAF9' }}>
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#1E3A5F]"></div>
-      </div>
-    )
+    return <HomeSkeleton />
   }
 
   if (error) {

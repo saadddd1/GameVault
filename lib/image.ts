@@ -2,8 +2,8 @@
 import sharp from 'sharp'
 import path from 'path'
 
-const COVER_WIDTH = 400
-const THUMB_WIDTH = 200
+const COVER_WIDTH = 600
+const THUMB_WIDTH = 300
 
 // 压缩封面图并生成缩略图，返回 { cover, thumb } 本地路径
 export async function compressImage(inputPath: string): Promise<{ cover: string; thumb: string }> {
@@ -14,12 +14,12 @@ export async function compressImage(inputPath: string): Promise<{ cover: string;
 
   await sharp(inputPath)
     .resize(COVER_WIDTH, null, { withoutEnlargement: true })
-    .webp({ quality: 80 })
+    .webp({ quality: 85 })
     .toFile(coverPath)
 
   await sharp(inputPath)
     .resize(THUMB_WIDTH, null, { withoutEnlargement: true })
-    .webp({ quality: 75 })
+    .webp({ quality: 80 })
     .toFile(thumbPath)
 
   const rel = (p: string) => '/' + path.relative(path.join(process.cwd(), 'public'), p).replace(/\\/g, '/')
