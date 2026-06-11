@@ -47,10 +47,10 @@ export default function HomePage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/games').then(r => r.json()),
-      fetch('/api/mods').then(r => r.json()),
-      fetch('/api/android').then(r => r.json()),
-      fetch('/api/windows').then(r => r.json()),
+      fetch('/api/games', { cache: 'no-store' }).then(r => r.json()),
+      fetch('/api/mods', { cache: 'no-store' }).then(r => r.json()),
+      fetch('/api/android', { cache: 'no-store' }).then(r => r.json()),
+      fetch('/api/windows', { cache: 'no-store' }).then(r => r.json()),
     ])
       .then(([gameData, modData, androidData, windowsData]) => {
         if (gameData.games) setGames(gameData.games)
