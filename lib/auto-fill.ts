@@ -1,6 +1,7 @@
 // 游戏自动填充：名称 → 模糊匹配 metadata → Steam 搜索 → 下载封面 → 扩充 metadata
 import fs from 'fs'
 import path from 'path'
+import { compressImage } from './image'
 
 interface GameMeta {
   id: number
@@ -121,10 +122,11 @@ async function downloadCoverLocally(url: string, filename: string): Promise<stri
   if (!url) return '/images/default.svg'
 
   const safe = filename.replace(/[^\x00-\x7F]/g, '').replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_')
-  const finalName = safe.length > 2 ? `${safe}.jpg` : `steam_${Date.now()}.jpg`
-  const filePath = path.join(IMAGES_DIR, finalName)
+  const baseName = safe.length > 2 ? safe : `steam_${Date.now()}`
+  const webpPath = path.join(IMAGES_DIR, `${baseName}.webp`)
 
-  if (fs.existsSync(filePath)) return `/images/${finalName}`
+  // 已存在压缩后的文件，直接返回
+  if (fs.existsSync(webpPath)) return `/images/${baseName}.webp`
 
   try {
     const controller = new AbortController()
@@ -137,9 +139,20 @@ async function downloadCoverLocally(url: string, filename: string): Promise<stri
     if (!res.ok) return '/images/default.svg'
 
     const buffer = Buffer.from(await res.arrayBuffer())
-    if (!fs.existsSync(IMAGES_DIR)) fs.mkdirSync(IMAGES_DIR, { recursive: true })
-    fs.writeFileSync(filePath, buffer)
-    return `/images/${finalName}`
+    const tmpPath = path.join(IMAGES_DIR, `${baseName}_tmp.jpg`)
+    fs.writeFileSync(tmpPath, buffer)
+
+    // 压缩 + 生成缩略图
+    try {
+      const result = await compressImage(tmpPath)
+      fs.unlinkSync(tmpPath)
+      return result.cover
+    } catch {
+      // 压缩失败，保留原图
+      const finalPath = path.join(IMAGES_DIR, `${baseName}.jpg`)
+      fs.renameSync(tmpPath, finalPath)
+      return `/images/${baseName}.jpg`
+    }
   } catch {
     return '/images/default.svg'
   }
