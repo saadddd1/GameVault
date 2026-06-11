@@ -1,11 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { addGame, getAllGames } from '@/lib/games'
+import { addGame } from '@/lib/games'
 import { requireAdmin } from '@/lib/auth'
 import { checkBodySize } from '@/lib/api-helpers'
+import { autoFillGame } from '@/lib/auto-fill'
 import * as XLSX from 'xlsx'
 
 const ALLOWED_EXTENSIONS = ['.xlsx', '.xls']
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+
+// 列名映射（兼容中英文）
+const COL = {
+  name: ['游戏名称', 'title', 'name'],
+  quarkUrl: ['夸克网盘链接', '夸克链接'],
+  quarkPwd: ['夸克提取码', '夸克密码'],
+  xunleiUrl: ['迅雷网盘链接', '迅雷链接'],
+  xunleiPwd: ['迅雷提取码', '迅雷密码'],
+  ucUrl: ['UC网盘链接', 'UC链接'],
+  ucPwd: ['UC提取码', 'UC密码'],
+  baiduUrl: ['百度网盘链接', '百度链接'],
+  baiduPwd: ['百度提取码', '百度密码'],
+}
+
+function getCell(row: Record<string, unknown>, keys: string[]): string {
+  for (const k of keys) {
+    if (row[k] !== undefined && row[k] !== null) return String(row[k]).trim()
+  }
+  return ''
+}
 
 export async function POST(request: NextRequest) {
   if (!requireAdmin(request)) {
@@ -18,9 +39,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const file = formData.get('file') as File
 
-    if (!file) {
-      return NextResponse.json({ error: '请上传文件' }, { status: 400 })
-    }
+    if (!file) return NextResponse.json({ error: '请上传文件' }, { status: 400 })
 
     const fileName = file.name.toLowerCase()
     if (!ALLOWED_EXTENSIONS.some(ext => fileName.endsWith(ext))) {
@@ -41,48 +60,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Excel文件为空' }, { status: 400 })
     }
 
-    const results = {
-      total: data.length,
-      success: 0,
-      failed: 0,
-      errors: [] as string[]
-    }
-
-    const currentData = getAllGames()
-    let maxId = currentData.games.reduce((max, game) => Math.max(max, game.id), 0)
+    const results = { total: data.length, success: 0, failed: 0, errors: [] as string[] }
 
     for (let i = 0; i < data.length; i++) {
       const row = data[i] as Record<string, unknown>
       const rowNum = i + 2
 
       try {
-        const title = row['游戏名称'] || row['title']
-        const description = row['游戏描述'] || row['description']
-        const size = row['游戏大小'] || row['size']
-        const category = row['游戏分类'] || row['category']
-
-        if (!title || !description || !size || !category) {
-          results.errors.push(`第${rowNum}行：缺少必填字段`)
+        const title = getCell(row, COL.name)
+        if (!title) {
+          results.errors.push(`第${rowNum}行：缺少游戏名称`)
           results.failed++
           continue
         }
 
-        const downloadLinks = []
-        const platform1 = row['下载平台1'] || row['platform1']
-        const url1 = row['下载链接1'] || row['url1']
-        const password1 = row['提取码1'] || row['password1'] || ''
-
-        if (platform1 && url1) {
-          downloadLinks.push({ platform: String(platform1), url: String(url1), password: String(password1) })
-        }
-
-        for (let j = 2; j <= 5; j++) {
-          const platform = row[`下载平台${j}`] || row[`platform${j}`]
-          const url = row[`下载链接${j}`] || row[`url${j}`]
-          const password = row[`提取码${j}`] || row[`password${j}`] || ''
-          if (platform && url) {
-            downloadLinks.push({ platform: String(platform), url: String(url), password: String(password) })
-          }
+        // 构建下载链接
+        const downloadLinks: { platform: string; url: string; password: string }[] = []
+        const platforms = [
+          { name: '夸克网盘', url: getCell(row, COL.quarkUrl), pwd: getCell(row, COL.quarkPwd) },
+          { name: '迅雷网盘', url: getCell(row, COL.xunleiUrl), pwd: getCell(row, COL.xunleiPwd) },
+          { name: 'UC网盘', url: getCell(row, COL.ucUrl), pwd: getCell(row, COL.ucPwd) },
+          { name: '百度网盘', url: getCell(row, COL.baiduUrl), pwd: getCell(row, COL.baiduPwd) },
+        ]
+        for (const p of platforms) {
+          if (p.url) downloadLinks.push({ platform: p.name, url: p.url, password: p.pwd })
         }
 
         if (downloadLinks.length === 0) {
@@ -91,21 +92,22 @@ export async function POST(request: NextRequest) {
           continue
         }
 
-        maxId++
+        // 自动填充
+        let description = ''; let coverImage = '/images/default.svg'; let size = ''; let category = '动作冒险'
+        try {
+          const filled = await autoFillGame(title)
+          description = filled.description
+          coverImage = filled.coverImage
+          size = filled.size
+          category = filled.category
+        } catch { /* auto-fill 失败不阻塞 */ }
+
         await addGame({
-          title: String(title),
-          description: String(description),
-          coverImage: row['封面图片'] ? String(row['封面图片']) : '/images/default.svg',
-          size: String(size),
-          category: String(category),
-          downloadLinks,
-          screenshots: [],
-          releaseDate: row['发行日期'] ? String(row['发行日期']) : new Date().toISOString().split('T')[0],
-          updateDate: row['更新日期'] ? String(row['更新日期']) : new Date().toISOString().split('T')[0],
-          downloadCount: row['下载次数'] ? Number(row['downloadCount']) : 0,
-          isHot: row['是否热门'] === '是' || row['isHot'] === 'true' || false,
-          isNew: row['是否新品'] !== '否' && row['isNew'] !== 'false',
-          isFeatured: row['是否精选'] === '是' || row['isFeatured'] === 'true' || false
+          title, description, coverImage, size, category,
+          downloadLinks, screenshots: [],
+          releaseDate: new Date().toISOString().split('T')[0],
+          updateDate: new Date().toISOString().split('T')[0],
+          downloadCount: 0, isHot: false, isNew: true, isFeatured: false,
         })
 
         results.success++
@@ -124,4 +126,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: '批量导入失败：' + error }, { status: 500 })
   }
 }
-
