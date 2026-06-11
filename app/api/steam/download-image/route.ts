@@ -51,8 +51,11 @@ export async function POST(request: NextRequest) {
     const extMap: Record<string, string> = { 'image/png': '.png', 'image/webp': '.webp', 'image/jpeg': '.jpg' }
     const ext = extMap[ct.split(';')[0]] || '.jpg'
 
-    // Sanitize filename, strip non-ASCII but keep basic chars
-    const safe = (filename || `steam_${Date.now()}`).replace(/[\\/:*?"<>|]/g, '_').replace(/\s+/g, '_')
+    // Sanitize filename: keep only ASCII alphanumeric, dash, underscore, dot; replace spaces with underscore
+    const safe = (filename || `steam_${Date.now()}`)
+      .replace(/[^\x00-\x7F]/g, '')  // strip non-ASCII
+      .replace(/[\\/:*?"<>|]/g, '_')
+      .replace(/\s+/g, '_')
     const finalName = safe.length > 2 ? `${safe}${ext}` : `steam_${Date.now()}${ext}`
 
     const dir = path.join(process.cwd(), 'public', 'images')
