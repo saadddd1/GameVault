@@ -37,5 +37,12 @@ _deploy.js
 # 生产数据 — 不跟踪，防止 git pull 覆盖服务器数据
 data/*.json
 data/.secret
+data/.webhook_secret
 # 保留参考数据
 !data/game-metadata.json
+
+# temp scripts
+fix_*.js
+
+# 本地备份
+gamevault-local2/
